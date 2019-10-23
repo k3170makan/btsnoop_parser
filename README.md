@@ -2,9 +2,11 @@
 Implementation of a btsnoop file parser in c.
 
 ## Usage
+```
 ./btsnoop_parse.elf btsnoop_hci.log
+```
 Sample output:
-
+```
 >>./btsnoop_parse.elf ./btsnoop_sample.log 
 btsnoop_header{
 	- magic	=> 'b[0x62]  t[0x74]  s[0x73]  n[0x6e]  o[0x6f]  o[0x6f]  p[0x70]  [0x00]  
@@ -39,8 +41,10 @@ btsnoop_header{
 	[0x00] [0x00] [0x00] [0x00] [0x00] [0x00] [0x00] 
 
 	}
-
+```
 ## Building
+```
 make
+```
 
 
