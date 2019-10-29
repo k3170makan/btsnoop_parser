@@ -11,6 +11,7 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -34,33 +35,189 @@ http://www.fte.com/webhelp/bpa600/Content/Technical_Information/BT_Snoop_File_Fo
 #define DATA_LINK_TYPE_HCI_SERIAL 1004
 #define DATA_LINK_TYPE_UNASSIGNED 1005
 
-#define HCI_CMD_PKT 0x1
-#define HCI_ASYNC_DATA_PKT 0x2
-#define HCI_SYNC_DATA_PKT 0x3
-#define HCI_EVENT_PKT 0x4
-#define HCI_EXT_CMD_PKT 0x9 #probably vendor commands?
+#define OGF(opcode) (uint16_t) (opcode >> 9) & 0x1F
+#define OCF(opcode) (uint16_t) opcode & 0x01FF
 
-typedef struct btsnoop_hci_cmd_packet_t{
-	unsigned char opcode; 
-	unsigned char param_length;
-	unsigned char params[0];  
-	
-} hci_cmd_packet_t;
+#define HCI_CMD_PKT 0x01
+#define HCI_ASYNC_DATA_PKT 0x02
+#define HCI_SYNC_DATA_PKT 0x03
+#define HCI_EVENT_PKT 0x04
+#define HCI_EXT_CMD_PKT 0x09 
+#define HCI_VENDOR_CMD_PKT 0xff
 
-typedef struct btsnoop_hci_async_data_packet_t{
-	unsigned char handle; 
-	unsigned char data_length;
-	unsigned char data[0];  
+#define HCI_EVENT_CODE_OFFSET 0x0
+#define HCI_EVENT_CODE_SZ sizeof(uint16_t)
+#define HCI_EVENT_PARAM_LEN_OFFSET sizeof(uint16_t)
+#define HCI_EVENT_PARAM_LEN_SZ sizeof(uint16_t)
+#define HCI_EVENT_PARAMS_OFFSET HCI_EVENT_PARAM_LEN_OFFSET + sizeof(uint16_t)
 
-} hci_async_data_packet_t;
+#define HCI_EVENT_INQUIRY_COMPLETE 0x01
+#define HCI_EVENT_INQUIRY_RESULT 0x02
+#define HCI_EVENT_CONNECTION_COMPLETE 0x03
+#define HCI_EVENT_CONNECTION_REQUEST 0x04
+#define HCI_EVENT_DISCONNECTION_COMPLETE 0x05
+#define HCI_EVENT_AUTHENTICATION_COMPLETE 0x06
+#define HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE 0x07
+#define HCI_EVENT_ENCRYPTION_CHANGE 0x08
+#define HCI_EVENT_LINK_KEY_CHANGE_COMPLETE 0x09
+#define HCI_EVENT_MASTER_LINK_KEY_COMPLETE 0x0A
+#define HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE 0x0B
+#define HCI_EVENT_READ_REMOTE_VERSION_COMPLETE 0x0C
+#define HCI_EVENT_QOS_SETUP_COMPLETE 0x0D
+#define HCI_EVENT_COMMAND_COMPLETE 0x0E
+#define HCI_EVENT_COMMAND_STATUS 0x0F
+#define HCI_EVENT_HARDWARE_ERROR 0x10
+#define HCI_EVENT_FLUSH_OCCURED 0x11
+#define HCI_EVENT_ROLE_CHANGE 0x12
+#define HCI_EVENT_NUMBER_OF_PACKETS 0x13
+#define HCI_EVENT_MODE_CHANGE 0x14
+#define HCI_EVENT_RETURN_LINK_KEYS 0x15
+#define HCI_EVENT_PIN_CODE_REQUEST 0x16
+#define HCI_EVENT_LINK_KEY_REQUEST 0x17
+#define HCI_EVENT_LINK_KEY_NOTIFICATION 0x18
+#define HCI_EVENT_LOOPBACK_COMMAND 0x19
+#define HCI_EVENT_DATA_BUFFER_OVERFLOW 0x1A
+#define HCI_EVENT_MAX_SLOTS_CHANGE 0x1B
+#define HCI_EVENT_READ_CLOCK_OFFSET 0x1C
+#define HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE 0x1D
+#define HCI_EVENT_QOS_VIOLATION 0x1E
+#define HCI_EVENT_PAGE_SCAN_MODE_CHANGE 0x1F
+#define HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE 0x20
 
-typedef struct btsnoop_hci_event_packet_t{
-	unsigned char event_code; 
-	unsigned char param_length;
-	unsigned char params[0];  
+const char* event_descriptions[] = {
+"INQUIRY COMPLETE",
+"INQUIRY RESULT ",
+"CONNECTION COMPLETE ",
+"CONNECTION REQUEST",
+"DISCONNECTION COMPLETE ",
+"AUTHENTICATION COMPLETE",
+"REMOTE NAME REQUEST COMPLETE ",
+"ENCRYPTION CHANGE",
+"LINK KEY CHANGE COMPLETE",
+"MASTER LINK KEY COMPLETE ",
+"READ REMOTE SUPPORTED FEATURES COMPLETE ",
+"READ REMOTE VERSION COMPLETE ",
+"QOS SETUP COMPLETE",
+"COMMAND COMPLETE",
+"COMMAND STATUS ",
+"HARDWARE ERROR",
+"FLUSH OCCURED ",
+"ROLE CHANGE",
+"NUMBER OF PACKETS",
+"MODE CHANGE",
+"RETURN LINK KEYS ",
+"PIN CODE REQUEST ",
+"LINK KEY REQUEST ",
+"LINK KEY NOTIFICATION ",
+"LOOPBACK COMMAND ",
+"DATA BUFFER OVERFLOW ",
+"MAX SLOTS CHANGE ",
+"READ CLOCK OFFSET ",
+"CONNECTION PACKET TYPE CHANGE ",
+"QOS VIOLATION ",
+"PAGE SCAN MODE CHANGE ",
+"PAGE SCAN REPETITION CHANGE ",0};
 
-} hci_event_packet_t;
 
+
+#define HCI_CMD_OPCODE_OFFSET 0x0
+#define HCI_CMD_OPCODE_SZ sizeof(uint16_t)
+#define HCI_CMD_PARAM_LEN_OFFSET sizeof(uint16_t)
+#define HCI_CMD_PARAM_LEN_SZ sizeof(uint16_t)
+#define HCI_CMD_PARAMS_OFFSET HCI_CMD_PARAM_LEN_OFFSET + sizeof(uint16_t)
+
+/*OGF 1*/
+#define HCI_CMD_INQUIRY 0x01
+#define HCI_CMD_INQUIRY_CANCEL 0x02
+#define HCI_CMD_PERIODIC_INQUIRY_MODE 0x03
+#define HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE 0x04
+#define HCI_CMD_CREATE_CONNECTION 0x05
+#define HCI_CMD_DISCONNECT 0x06
+#define HCI_CMD_ADD_SCO_CONNECTION 0x07
+#define HCI_CMD_ACCEPT_CONNECTION_REQUEST 0x09
+#define HCI_CMD_REJECT_CONNECTION_REQUEST 0x0A
+#define HCI_CMD_LINK_KEY_REQUEST_REPLY 0x0B
+#define HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY 0x0C
+#define HCI_CMD_PINCODE_REQUEST_REPLY 0x0D
+#define HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY 0x0E
+#define HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE 0x0F
+#define HCI_CMD_AUTHENTICATION_REQUESTED 0x11
+#define HCI_CMD_SET_CONNECTION_ENCRYPTION 0x13
+#define HCI_CMD_CHANGE_CONNECTION_LINK_KEY 0x15
+#define HCI_CMD_MASTER_LINK_KEY 0x17
+#define HCI_CMD_REMOTE_NAME_REQUEST 0x19
+#define HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES 0x1B
+#define HCI_CMD_READ_REMOTE_VERSION_INFORMATION 0x1D
+#define HCI_CMD_READ_CLOCK_OFFSET 0x1F
+
+const char *cmd_descriptions = {
+"INQUIRY",
+"INQUIRY CANCEL",
+"PERIODIC INQUIRY MODE ",
+"EXIT PERIODIC INQUIRY MODE ",
+"CREATE CONNECTION",
+"DISCONNECT",
+"ADD SCO CONNECTION",
+"ACCEPT CONNECTION REQUEST",
+"REJECT CONNECTION REQUEST",
+"LINK KEY REQUEST REPLY",
+"LINK KEY REQUEST NEGATIVE REPLY",
+"PINCODE REQUEST REPLY",
+"PINCODE REQUEST NEGATIVE REPLY",
+"CHANGE CONNECTION PACKET TYPE",
+"AUTHENTICATION REQUESTED ",
+"SET CONNECTION ENCRYPTION",
+"CHANGE CONNECTION LINK KEY",
+"MASTER LINK KEY",
+"REMOTE NAME REQUEST",
+"READ REMOTE SUPPORTED FEATURES",
+"READ REMOTE VERSION INFORMATION",
+"READ CLOCK OFFSET",0 };
+
+
+/*OGF 2*/
+/*OGF 3*/
+
+#define HCI_CMD_INQUIRY 0x01
+#define HCI_ASYNC_HANDLE_OFFSET 0x0
+#define HCI_ASYNC_HANDLE_SZ 12
+#define HCI_ASYNC_PB_FLAG_OFFSET HCI_ASYNC_HANDLE_SZ
+#define HCI_ASYNC_PB_FLAG_SZ sizeof(uint16_t)
+#define HCI_ASYNC_BC_FLAG_OFFSET HCI_ASYNC_PB_FLAG_OFFSET + HCI_ASYNC_PB_FLAG_SZ
+#define HCI_ASYNC_BC_FLAG_SZ sizeof(uint16_t)
+#define HCI_EVENT_PARAMS HCI_EVENT_PARAM_LEN_OFFSET + sizeof(uint16_t)
+
+
+
+typedef struct hci_pkt_cmd{
+	uint16_t opcode;
+	uint8_t param_len;
+	uint8_t *params;
+
+} hci_pkt_cmd_t;
+
+typedef struct hci_pkt_event{
+	uint16_t event_code;
+	uint8_t param_len;
+	uint8_t *params;
+
+} hci_pkt_event_t;
+
+typedef struct hci_pkt_async{
+	unsigned char handle[12];
+	uint16_t pb_flag;
+	uint16_t bc_flag;
+	uint16_t *data_len;
+	uint8_t *data;
+} hci_pkt_async_t;
+
+typedef struct hci_pkt {
+	hci_pkt_cmd_t *cmd;
+	hci_pkt_async_t* async;
+	hci_pkt_event_t* event;
+	char *descr;
+
+} hci_pkt_t;
 
 //not sure how these work
 /**
@@ -88,10 +245,12 @@ typedef struct btsnoop_packet_record{
 } btsnoop_packet_record_t;
 
 
-typedef struct btsnoop_packet{
+typedef struct btsnoop_packet_list{
+	struct btsnoop_packet_list *prev;
+	struct btsnoop_packet_list *next;
 	btsnoop_packet_record_t *record;
-	btsnoop_packet_record_t *next;
-	
+	hci_pkt_t * hci_pkt;
+
 } btsnoop_packet_list_t;
 
 typedef struct btsnoop_header{
@@ -108,7 +267,177 @@ typedef struct btsnoop_file {
 
 } btsnoop_file_t;
 
+
+btsnoop_header_t* open_hci_log(const char*);
+FILE* show_header(FILE *);
+btsnoop_header_t* init_bt_header(FILE *);
+static void print_bt_header(btsnoop_header_t *);
+static void print_btpacket_record(unsigned int, btsnoop_packet_record_t *);
+
+
 //some constants for fseek and fread
+/**
+typedef struct hci_pkt_event{
+	uint16_t event_code;
+	uint8_t param_len;
+	uint8_t *params;
+
+} hci_pkt_event_t;
+
+
+**/
+void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
+
+	unsigned int _index = 0;
+
+	hci_pkt_event_t *_hci_event = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
+	_hci_event->event_code = (uint16_t)record->data[1];
+	_hci_event->param_len = record->data[2];
+
+	pkt->event = _hci_event;
+	pkt->descr = (char *)malloc(sizeof(char)*sizeof(pkt->descr));
+
+	memset(&pkt->descr,0x0,sizeof(pkt->descr));
+
+	printf("\t[hci->event] event_code => '0x%.2x' : ", _hci_event->event_code);
+
+	switch(_hci_event->event_code){
+
+		case HCI_EVENT_INQUIRY_COMPLETE: printf("'%s'\n",event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);break;
+		case HCI_EVENT_INQUIRY_RESULT:printf("'%s'\n",event_descriptions[HCI_EVENT_INQUIRY_RESULT-1]);break;
+		case HCI_EVENT_CONNECTION_COMPLETE:printf("'%s'\n",event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);break;
+		case HCI_EVENT_CONNECTION_REQUEST:printf("'%s'\n",event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);break;
+		case HCI_EVENT_DISCONNECTION_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1]);break;
+		case HCI_EVENT_AUTHENTICATION_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1]);break; 
+		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1]);break;
+		case HCI_EVENT_ENCRYPTION_CHANGE :printf("'%s'\n",event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1]);break;
+		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1]);break;
+		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1]);break;
+		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1]);break;
+		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE :printf("'%s'\n",event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1]);break;
+		case HCI_EVENT_QOS_SETUP_COMPLETE:printf("'%s'\n",event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1]);break;
+		case HCI_EVENT_COMMAND_COMPLETE:printf("'%s'\n",event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1]);break;
+		case HCI_EVENT_COMMAND_STATUS:printf("'%s'\n",event_descriptions[HCI_EVENT_COMMAND_STATUS-1]);break;
+		case HCI_EVENT_HARDWARE_ERROR:printf("'%s'\n",event_descriptions[HCI_EVENT_HARDWARE_ERROR-1]);break;
+		case HCI_EVENT_FLUSH_OCCURED:printf("'%s'\n",event_descriptions[HCI_EVENT_FLUSH_OCCURED-1]);break;
+		case HCI_EVENT_ROLE_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_ROLE_CHANGE-1]);break;
+		case HCI_EVENT_NUMBER_OF_PACKETS:printf("'%s'\n",event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1]);break;
+		case HCI_EVENT_MODE_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_MODE_CHANGE-1]);break;
+		case HCI_EVENT_RETURN_LINK_KEYS:printf("'%s'\n",event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1]);break;
+		case HCI_EVENT_PIN_CODE_REQUEST:printf("'%s'\n",event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);break;
+		case HCI_EVENT_LINK_KEY_REQUEST :printf("'%s'\n",event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1]);break;
+		case HCI_EVENT_LINK_KEY_NOTIFICATION :printf("'%s'\n",event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1]);break;
+		case HCI_EVENT_LOOPBACK_COMMAND:printf("'%s'\n",event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1]);break;
+		case HCI_EVENT_DATA_BUFFER_OVERFLOW :printf("'%s'\n",event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1]);break;
+		case HCI_EVENT_MAX_SLOTS_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1]);break;
+		case HCI_EVENT_READ_CLOCK_OFFSET:printf("'%s'\n",event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1]);break;
+		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1]);break;
+		case HCI_EVENT_QOS_VIOLATION :printf("'%s'\n",event_descriptions[HCI_EVENT_QOS_VIOLATION-1]);break;
+		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1]);break;
+		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE:printf("'%s'\n",event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE+1]);break;
+		default:break;	
+	}
+	printf("\t[hci->event] param_len => '0x%.2x' (%d) bytes\n",_hci_event->param_len,_hci_event->param_len);
+	return;
+}
+
+void parse_hci_cmd_params(hci_pkt_t* pkt,btsnoop_packet_record_t* record){
+	
+	return;	
+}
+void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
+	unsigned int _index = 0;
+	if (sizeof(record->data) < 4){ return ; }
+
+	hci_pkt_cmd_t* _cmd_pkt = (hci_pkt_cmd_t *) malloc(sizeof(hci_pkt_cmd_t));
+	pkt->cmd = _cmd_pkt;
+
+	_cmd_pkt->opcode = ((uint16_t ) record->data[2] << 8) | record->data[1];
+	_cmd_pkt->param_len = (uint16_t) record->data[3];	
+	_cmd_pkt->params = (uint8_t *) malloc(sizeof(uint8_t)*_cmd_pkt->param_len);
+
+	//if (_cmd_pkt->opcode != 0x03){ return; }
+
+	//for (;_index < _cmd_pkt->param_len ;_index++){
+	//		_cmd_pkt->params[_index] = record->data[3+_index];
+	//}
+
+	printf("\t[hci->cmd] opcode -> '0x%.4x'\n",_cmd_pkt->opcode);
+	printf("\t[hci->cmd] opcode group   -> '0x%.2x'\n",OGF(_cmd_pkt->opcode));
+	printf("\t[hci->cmd] opcode command -> '0x%.2x'\n",OCF(_cmd_pkt->opcode));
+	printf("\t[hci->cmd] param_len -> '0x%.2x' (%d) bytes \n",_cmd_pkt->param_len,_cmd_pkt->param_len);
+	printf("\t[hci->cmd] cmd descr -> ");
+
+	switch(OGF(_cmd_pkt->opcode)){
+		case 0x1:
+			switch(OCF(_cmd_pkt->opcode)){
+				case HCI_CMD_INQUIRY: printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_INQUIRY_CANCEL: printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY_CANCEL]);break;
+				case HCI_CMD_PERIODIC_INQUIRY_MODE : printf("'%s'\n",cmd_descriptions[HCI_CMD_PERIODIC_INQUIRY_MODE]);break;
+				case HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE : printf("'%s'\n",cmd_descriptions[HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE]);break;
+				case HCI_CMD_CREATE_CONNECTION : printf("'%s'\n",cmd_descriptions[HCI_CMD_CREATE_CONNECTION]);break;
+				case HCI_CMD_DISCONNECT: printf("'%s'\n",cmd_descriptions[HCI_CMD_DISCONNECT]);break;
+				case HCI_CMD_ADD_SCO_CONNECTION: printf("'%s'\n",cmd_descriptions[HCI_CMD_ADD_SCO_CONNECTION]);break;
+				case HCI_CMD_ACCEPT_CONNECTION_REQUEST: printf("'%s'\n",cmd_descriptions[HCI_CMD_ACCEPT_CONNECTION_REQUEST]);break;
+				case HCI_CMD_REJECT_CONNECTION_REQUEST :printf("'%s'\n",cmd_descriptions[HCI_CMD_REJECT_CONNECTION_REQUEST]);break;
+				case HCI_CMD_LINK_KEY_REQUEST_REPLY:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_PINCODE_REQUEST_REPLY:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE :printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_AUTHENTICATION_REQUESTED:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_SET_CONNECTION_ENCRYPTION:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_CHANGE_CONNECTION_LINK_KEY :printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_MASTER_LINK_KEY:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_REMOTE_NAME_REQUEST :printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES :printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_READ_REMOTE_VERSION_INFORMATION :printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+				case HCI_CMD_READ_CLOCK_OFFSET:printf("'%s'\n",cmd_descriptions[HCI_CMD_INQUIRY]);break;
+			}break;
+		default: break;
+	}	
+		
+	return;
+}
+void parse_hci_async(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
+	return;
+}
+void parse_hci_vendorcmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
+	return;
+}
+
+void parse_hci(hci_pkt_t *pkt,btsnoop_packet_record_t* packet_record){
+
+	printf("[hci] parsing hci packet @ (%p)\n", &packet_record);
+
+	uint8_t pkt_type = 0;
+	pkt = (hci_pkt_t *)malloc(sizeof(hci_pkt_t));
+	pkt_type = (uint8_t) packet_record->data[0];
+	printf("[hci] packet type -> [0x%.2x]",pkt_type);
+
+	switch(pkt_type){
+			case HCI_CMD_PKT:  
+					printf(" HCI_CMD\n");	
+					parse_hci_cmd(pkt,packet_record);break;
+			case HCI_ASYNC_DATA_PKT:  
+					printf(" HCI_ASYNC_DATA\n");	
+					parse_hci_async(pkt,packet_record);break;
+			case HCI_EVENT_PKT:  
+					printf(" HCI_EVENT\n");	
+					parse_hci_event(pkt,packet_record);break;
+			case HCI_EXT_CMD_PKT:  
+					printf(" HCI_EXT_EVENT\n");	
+					parse_hci_event(pkt,packet_record);break;
+			case HCI_VENDOR_CMD_PKT:  
+					printf(" HCI_VENDOR_CMD\n");	
+					parse_hci_event(pkt,packet_record);break;
+					parse_hci_vendorcmd(pkt,packet_record);break;
+			default: return; break;
+	}		
+	print_btpacket_record(0,packet_record);
+	return pkt;
+}
+
 
 #define BT_FILE_MAGIC_SZ sizeof(unsigned char)*8
 #define BT_FILE_MAGIC_OFFSET 0
@@ -127,12 +456,6 @@ typedef struct btsnoop_file {
 
 
 
-
-btsnoop_header_t* open_hci_log(const char*);
-FILE* show_header(FILE *);
-btsnoop_header_t* init_bt_header(FILE *);
-static void print_bt_header(btsnoop_header_t *);
-static void print_btpacket_record(unsigned int, btsnoop_packet_record_t *);
 
 int readseek_btpacket_record(FILE *,btsnoop_packet_record_t *);
 int readseek_btpacket_origlength(FILE *,btsnoop_packet_record_t *);
@@ -302,7 +625,7 @@ void print_btpacket_record(unsigned int offset, btsnoop_packet_record_t * _bt_pa
 			return;
 		}
 
-		printf("(%d)[0x%.2x] btsnoop_packet_record_t {\n",offset,offset);
+		printf("\t(%d)[0x%.2x] btsnoop_packet_record_t {\n",offset,offset);
 		printf("\t* orignal length => %d\n",_bt_packet->orig_length);
 		printf("\t* included length => %d\n",_bt_packet->incl_length);
 		printf("\t* flags => %d\n",_bt_packet->flags);
@@ -332,7 +655,7 @@ void print_btpacket_record(unsigned int offset, btsnoop_packet_record_t * _bt_pa
 		printf("\n\n\t}\n\n");
 }
 
-btsnoop_packet_record_t* get_bt_packets(const char *filename){
+btsnoop_packet_list_t* get_bt_packets(const char *filename){
 
 	
 	FILE *file = fopen(filename,"r");
@@ -341,28 +664,78 @@ btsnoop_packet_record_t* get_bt_packets(const char *filename){
 		printf("[x] problem opening file\n");
 		return NULL;
 	}
-	btsnoop_packet_record_t **bt_packet_list;
+
+	btsnoop_packet_list_t * _bt_packet_list = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
+	if (!_bt_packet_list){
+		return NULL;
+	}
+	memset(_bt_packet_list,0x0,sizeof(btsnoop_packet_list_t));	
+
 	btsnoop_packet_record_t *_bt_packet = (btsnoop_packet_record_t *) malloc(sizeof(btsnoop_packet_record_t));
+	if (!_bt_packet){
+		return NULL;
+	}
+	memset(_bt_packet,0x0,sizeof(btsnoop_packet_list_t));	
+
+	btsnoop_packet_list_t *_prev_list = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
+	if (!_prev_list){
+		return NULL;
+	}
+	memset(_prev_list,0x0,sizeof(btsnoop_packet_list_t));	
+
+	btsnoop_packet_list_t *_next_list = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
+	if (!_next_list){
+		return NULL;
+	}
+	memset(_next_list,0x0,sizeof(btsnoop_packet_list_t));	
+
+	btsnoop_packet_list_t *_cur_list = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
+	if (!_cur_list){
+		return NULL;
+	}
+	memset(_cur_list,0x0,sizeof(btsnoop_packet_list_t));	
+
+
+	_bt_packet_list->prev = NULL;
+	_bt_packet_list->record = NULL;
+	_bt_packet_list->next = _cur_list;
+	_prev_list = _bt_packet_list;
+
 	ssize_t bytes_read; 
-	unsigned int index;
+	unsigned int index = 0;
 	char *cur_data;
 	unsigned int data_index;
+	hci_pkt_t *_hci_pkt = NULL;
 	fseek(file,BT_FILE_HEADER_SZ,SEEK_SET); //reset pointer
 	//bt_packet_list =	(btsnoop_packet_record_t **) malloc(sizeof(btsnoop_packet_record_t *)*MAX_PACKET_LIST_SZ);
-
 	while (bytes_read != -1){
 		//read the data field
 		_bt_packet = (btsnoop_packet_record_t *) malloc(sizeof(btsnoop_packet_record_t));
+		if (!_bt_packet){
+			return NULL;
+		}
+			
 		bytes_read = readseek_btpacket_record(file,_bt_packet);
 		if (_bt_packet && _bt_packet->incl_length){
+			//unsigned int tell = ftell(file);		
+			//print_btpacket_record(tell,_bt_packet);	 //this works, so now I need to build my linked list of bt packets
+			index += 1;
 			//bt_packet_list[index++] = _bt_packet;					
-			unsigned int tell = ftell(file);		
-			print_btpacket_record(tell,_bt_packet);	 //this works, so now I need to build my linked list of bt packets
+			_cur_list->record = _bt_packet;
+			parse_hci(_hci_pkt,_bt_packet);
+			_cur_list->prev = _prev_list;	
+
+			btsnoop_packet_list_t *cur_prev = _cur_list->prev;
+			cur_prev->next = _cur_list;
+
+			_prev_list = _cur_list;
+			_cur_list->next = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
+			_cur_list = _cur_list->next;
 			//get_hci_packet(_bt_packet);	 //everything is in place now, we just need to map out the hci data
 		}
 	}
 	
-	return bt_packet_list;
+	return _bt_packet_list;
 }
 
 
@@ -484,8 +857,17 @@ int main(int argc, char **argv){
 	btsnoop_header_t *bt_header = NULL;
 	bt_header = open_hci_log(argv[1]);
 	print_bt_header(bt_header);
-	get_bt_packets(argv[1]);
+	btsnoop_packet_list_t *_packet_list = get_bt_packets(argv[1]);
+	hci_pkt_t *_hci_pkt = NULL;
+	
+	unsigned int index = 0;
+	printf("[*] printing records...\n");
+	while (_packet_list != NULL){
 
+			btsnoop_packet_record_t *_packet_record = _packet_list->record;	
+			//print_btpacket_record(0,_packet_record);
+			//parse_hci(_hci_pkt,&_packet_record);
+			_packet_list = _packet_list->next;
+	}
 	return 0;
 }
-
