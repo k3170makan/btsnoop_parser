@@ -1044,7 +1044,6 @@ void print_btpacket_record_withhci(unsigned int offset,
 		printf("\n\n\t\t}");
 		printf("\n\n\t}\n\n");
 }
-void
 void print_btpacket_record(unsigned int offset, btsnoop_packet_record_t * _bt_packet){
 
 		time_t raw_time;
@@ -1362,7 +1361,7 @@ int main(int argc, char **argv){
 			btsnoop_packet_record_t *_packet_record = (btsnoop_packet_record_t *)_packet_list->record;	
 			hci_pkt_t * _hci_packet_ = (hci_pkt_t*) _hci_packet_list->packet;
 
-			print_btpacket_record_withhci(0,_packet_record,_hci_packet_);
+			//print_btpacket_record_withhci(0,_packet_record,_hci_packet_);
 			print_btpacket_record(0,_packet_record);
 
 			_packet_list = _packet_list->next;
