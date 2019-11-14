@@ -36,7 +36,7 @@ http://www.fte.com/webhelp/bpa600/Content/Technical_Information/BT_Snoop_File_Fo
 #define DATA_LINK_TYPE_HCI_SERIAL 1004
 #define DATA_LINK_TYPE_UNASSIGNED 1005
 
-#define OGF(opcode) (uint16_t) (opcode >> 9) & 0x1F
+#define OGF(opcode) (uint16_t) (opcode >> 10) & 0x01FF
 #define OCF(opcode) (uint16_t) opcode & 0x01FF
 
 #define HCI_CMD_PKT 0x01
@@ -151,6 +151,71 @@ const char* event_descriptions[] = {
 #define HCI_CMD_READ_REMOTE_VERSION_INFORMATION 0x1D
 #define HCI_CMD_READ_CLOCK_OFFSET 0x1F
 
+/*OGF 2*/
+#define HCI_CMD_HOLD_MODE 0x001
+#define HCI_CMD_SNIFF_MODE 0x003
+#define HCI_CMD_EXIT_SNIFF_MODE 0x0004
+#define HCI_CMD_PARK_MODE 0x0005
+#define HCI_CMD_EXIT_PARK_MODE 0x0006
+#define HCI_CMD_QOS_SETUP 0x0007
+#define HCI_CMD_ROLE_DISCOVERY 0x0009
+#define HCI_CMD_SWITCH_ROLE 0x000B
+#define HCI_CMD_READ_LINK_POLICY_SETTINGS 0x000C
+#define HCI_CMD_WRITE_LINK_POLICY_SETTINGS 0x000D
+
+/*OGF 3*/
+#define HCI_CMD_SET_EVENT_MASK 0x0001
+#define HCI_CMD_RESET 0x0003
+#define HCI_CMD_SET_EVENT_FILTER 0x0005
+#define HCI_CMD_FLUSH 0x0008
+#define HCI_CMD_READ_PIN_TYPE 0x0009
+#define HCI_CMD_WRITE_PIN_TYPE 0x000A
+#define HCI_CMD_CREATE_NEW_UNIT_KEY 0x000B
+#define HCI_CMD_READ_STORED_LINK_KEY 0x000D
+#define HCI_CMD_WRITE_STORED_LINK_KEY 0x0011
+#define HCI_CMD_DELETE_STORED_LINK_KEY 0x0012
+#define HCI_CMD_CHANGE_LOCAL_NAME 0x0013
+#define HCI_CMD_READ_LOCAL_NAME 0x0014
+#define HCI_CMD_READ_CONNECTION_ACCEPT_TIMEOUT 0x0015
+#define HCI_CMD_WRITE_CONNECTION_ACCEPT_TIMEOUT 0x0016
+#define HCI_CMD_READ_PAGE_TIMEOUT 0x0017
+#define HCI_CMD_WRITE_PAGE_TIMEOUT 0x0018
+#define HCI_CMD_READ_SCAN_ENABLE 0x0019
+#define HCI_CMD_WRITE_SCAN_ENABLE 0x001A
+#define HCI_CMD_READ_PAGE_SCAN_ACTIVITY 0x001B
+#define HCI_CMD_WRITE_PAGE_SCAN_ACTIVITY 0x001C
+#define HCI_CMD_READ_INQUIRY_SCAN_ACTIVITY 0x001D
+#define HCI_CMD_WRITE_INQUIRY_SCAN_ACTIVITY 0x001E
+#define HCI_CMD_READ_AUTHENTICATION_ENABLE 0x001F
+#define HCI_CMD_WRITE_AUTHENTICATION_ENABLE 0x0020
+#define HCI_CMD_READ_ENCRYPTION_MODE 0x0021
+#define HCI_CMD_WRITE_ENCRYPTION_MODE 0x0022
+#define HCI_CMD_READ_DEVICE_CLASS 0x0023
+#define HCI_CMD_WRITE_DEVICE_CLASS 0x0024
+#define HCI_CMD_READ_VOICE_SETTING 0x0025
+#define HCI_CMD_WRITE_VOICE_SETTING 0x0026
+#define HCI_CMD_READ_AUTOMATIC_FLUSH_TIMEOUT 0x0027
+#define HCI_CMD_WRITE_AUTOMATIC_FLUSH_TIMEOUT 0x0028
+#define HCI_CMD_READ_NUM_BROADCAST_RETRANSMISSIONS 0x0029
+#define HCI_CMD_WRITE_NUM_BROADCAST_RETRANSMISSIONS 0x002A
+#define HCI_CMD_READ_HOLD_MODE_ACTIVITY 0x002B
+#define HCI_CMD_WRITE_HOLD_MODE_ACTIVITY 0x002C
+#define HCI_CMD_READ_TRANSMIT_POWER_LEVEL 0x002D
+#define HCI_CMD_READ_SCO_FLOW_CONTROL_ENABLE 0x002E
+#define HCI_CMD_WRITE_SCO_FLOW_CONTROL_ENABLE 0x002F
+#define HCI_CMD_SET_HOST_CONTROLLER_TO_HOST_FLOW_CONTROL 0x0031
+#define HCI_CMD_HOST_BUFFER_SIZE 0x0033
+#define HCI_CMD_NUMBER_OF_COMPLETED_PACKETS 0x0035
+#define HCI_CMD_READ_LINK_SUPERVISION_TIMEOUT 0x0036
+#define HCI_CMD_WRITE_LINK_SUPERVISION_TIMEOUT 0x0037
+#define HCI_CMD_READ_NUMBER_OF_SUPPORTED_IAC 0x0038
+#define HCI_CMD_READ_CURRENT_IAC_LAP 0x0039
+#define HCI_CMD_WRITE_CURRENT_IAC_LAP 0x003A
+#define HCI_CMD_READ_PAGE_SCAN_PERIOD_MODE 0x003B
+#define HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE 0x003C
+#define HCI_CMD_READ_PAGE_SCAN_MODE 0x003D
+#define HCI_CMD_WRITE_PAGE_SCAN_MODE 0x003E
+
 const char *cmd_descriptions[] = {
 "INQUIRY",
 "INQUIRY CANCEL",
@@ -176,10 +241,6 @@ const char *cmd_descriptions[] = {
 "READ CLOCK OFFSET",0 };
 
 
-/*OGF 2*/
-/*OGF 3*/
-
-#define HCI_CMD_INQUIRY 0x01
 #define HCI_ASYNC_HANDLE_OFFSET 0x0
 #define HCI_ASYNC_HANDLE_SZ 12
 #define HCI_ASYNC_PB_FLAG_OFFSET HCI_ASYNC_HANDLE_SZ
@@ -187,7 +248,6 @@ const char *cmd_descriptions[] = {
 #define HCI_ASYNC_BC_FLAG_OFFSET HCI_ASYNC_PB_FLAG_OFFSET + HCI_ASYNC_PB_FLAG_SZ
 #define HCI_ASYNC_BC_FLAG_SZ sizeof(uint16_t)
 #define HCI_EVENT_PARAMS HCI_EVENT_PARAM_LEN_OFFSET + sizeof(uint16_t)
-
 
 
 typedef struct hci_pkt_cmd{
@@ -533,7 +593,8 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	//		_cmd_pkt->params[_index] = record->data[3+_index];
 	//}
 
-	
+	//https://lisha.ufsc.br/teaching/shi/ine5346-2003-1/work/bluetooth/hci_commands.html	
+
 	switch(OGF(_cmd_pkt->opcode)){
 		case 0x01:
 			switch(OCF(_cmd_pkt->opcode)){
@@ -692,19 +753,83 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 					//&pkt->descr[descr_size] = '\0';
 					break;
 			}break;
+			case 0x02:
+				switch(OCF(_cmd_pkt->opcode)){
+					case HCI_CMD_HOLD_MODE:;break;
+					case HCI_CMD_SNIFF_MODE:;break;
+					case HCI_CMD_EXIT_SNIFF_MODE:;break;
+					case HCI_CMD_PARK_MODE: ;break;
+					case HCI_CMD_EXIT_PARK_MODE:;break;
+					case HCI_CMD_QOS_SETUP:;break;
+					case HCI_CMD_ROLE_DISCOVERY:;break;
+					case HCI_CMD_SWITCH_ROLE:;break;
+					case HCI_CMD_READ_LINK_POLICY_SETTINGS:;break;
+					case HCI_CMD_WRITE_LINK_POLICY_SETTINGS:;break;
+				};break;
+			case 0x03:
+				switch(OCF(_cmd_pkt->opcode)){
+					case HCI_CMD_SET_EVENT_MASK:;break;
+					case HCI_CMD_RESET:;break;
+					case HCI_CMD_SET_EVENT_FILTER:;break;
+					case HCI_CMD_FLUSH:;break;
+					case HCI_CMD_READ_PIN_TYPE:;break;
+					case HCI_CMD_WRITE_PIN_TYPE:;break;
+					case HCI_CMD_CREATE_NEW_UNIT_KEY:;break;
+					case HCI_CMD_READ_STORED_LINK_KEY:;break;
+					case HCI_CMD_WRITE_STORED_LINK_KEY:;break;
+					case HCI_CMD_DELETE_STORED_LINK_KEY:;break;
+					case HCI_CMD_CHANGE_LOCAL_NAME:;break;
+					case HCI_CMD_READ_LOCAL_NAME:;break;
+					case HCI_CMD_READ_CONNECTION_ACCEPT_TIMEOUT:;break;
+					case HCI_CMD_WRITE_CONNECTION_ACCEPT_TIMEOUT:;break;
+					case HCI_CMD_READ_PAGE_TIMEOUT:;break;
+					case HCI_CMD_WRITE_PAGE_TIMEOUT:;break;
+					case HCI_CMD_READ_SCAN_ENABLE:;break;
+					case HCI_CMD_WRITE_SCAN_ENABLE:;break;
+					case HCI_CMD_READ_PAGE_SCAN_ACTIVITY:;break;
+					case HCI_CMD_WRITE_PAGE_SCAN_ACTIVITY:;break;
+					case HCI_CMD_READ_INQUIRY_SCAN_ACTIVITY:;break;
+					case HCI_CMD_WRITE_INQUIRY_SCAN_ACTIVITY:;break;
+					case HCI_CMD_READ_AUTHENTICATION_ENABLE:;break;
+					case HCI_CMD_WRITE_AUTHENTICATION_ENABLE:;break;
+					case HCI_CMD_READ_ENCRYPTION_MODE:;break;
+					case HCI_CMD_WRITE_ENCRYPTION_MODE:;break;
+					case HCI_CMD_READ_DEVICE_CLASS:;break;
+					case HCI_CMD_WRITE_DEVICE_CLASS:;break;
+					case HCI_CMD_READ_VOICE_SETTING:;break;
+					case HCI_CMD_WRITE_VOICE_SETTING:;break;
+					case HCI_CMD_READ_AUTOMATIC_FLUSH_TIMEOUT:;break;
+					case HCI_CMD_WRITE_AUTOMATIC_FLUSH_TIMEOUT:;break;
+					case HCI_CMD_READ_NUM_BROADCAST_RETRANSMISSIONS:;break;
+					case HCI_CMD_WRITE_NUM_BROADCAST_RETRANSMISSIONS:;break;
+					case HCI_CMD_READ_HOLD_MODE_ACTIVITY:;break;
+					case HCI_CMD_WRITE_HOLD_MODE_ACTIVITY:;break;
+					case HCI_CMD_READ_TRANSMIT_POWER_LEVEL:;break;
+					case HCI_CMD_READ_SCO_FLOW_CONTROL_ENABLE:;break;
+					case HCI_CMD_WRITE_SCO_FLOW_CONTROL_ENABLE:;break;
+					case HCI_CMD_SET_HOST_CONTROLLER_TO_HOST_FLOW_CONTROL:;break;
+					case HCI_CMD_HOST_BUFFER_SIZE:;break;
+					case HCI_CMD_NUMBER_OF_COMPLETED_PACKETS:;break;
+					case HCI_CMD_READ_LINK_SUPERVISION_TIMEOUT:;break;
+					case HCI_CMD_WRITE_LINK_SUPERVISION_TIMEOUT:;break;
+					case HCI_CMD_READ_NUMBER_OF_SUPPORTED_IAC:;break;
+					case HCI_CMD_READ_CURRENT_IAC_LAP:;break;
+					case HCI_CMD_WRITE_CURRENT_IAC_LAP:;break;
+					case HCI_CMD_READ_PAGE_SCAN_PERIOD_MODE:;break;
+					case HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE:;break;
+					case HCI_CMD_READ_PAGE_SCAN_MODE:;break;
+					case HCI_CMD_WRITE_PAGE_SCAN_MODE:;break;
+				
+				};break;
 	}	
 	printf("\t\tHCI CMD: [%s] {\n",
 				pkt->descr);				
-
 	printf("\t\t* opcode -> '0x%.4x'\n",
 		_cmd_pkt->opcode);
-
 	printf("\t\t* opcode group   -> '0x%.2x'\n",
 		OGF(_cmd_pkt->opcode));
-
 	printf("\t\t* opcode command -> '0x%.2x'\n",
 		OCF(_cmd_pkt->opcode));
-
 	printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
 		_cmd_pkt->param_len,
 			_cmd_pkt->param_len);
