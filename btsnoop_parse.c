@@ -27,6 +27,21 @@ http://www.fte.com/webhelp/bpa600/Content/Technical_Information/BT_Snoop_File_Fo
 	(unsigned int)number >> 1 & 0x000000ff,\
 	(unsigned int)number & 0x000000ff))
 
+#define BT_FILE_MAGIC_SZ sizeof(unsigned char)*8
+#define BT_FILE_MAGIC_OFFSET 0
+#define BT_FILE_VERSION_SZ sizeof(unsigned int)
+#define BT_FILE_VERSION_OFFSET BT_FILE_MAGIC_OFFSET+BT_FILE_MAGIC_SZ
+#define BT_FILE_DATALINK_TYPE_SZ sizeof(unsigned int)
+#define BT_FILE_DATALINK_TYPE_OFFSET BT_FILE_VERSION_OFFSET+BT_FILE_VERSION_SZ
+#define BT_FILE_HEADER_SZ BT_FILE_MAGIC_SZ+BT_FILE_VERSION_SZ+BT_FILE_DATALINK_TYPE_SZ
+#define MAX_PACKET_LIST_SZ 1024
+#define BT_PACKET_ORIGLEN_SZ sizeof(unsigned int)
+#define BT_PACKET_INCLEN_SZ sizeof(unsigned int)
+#define BT_PACKET_FLAGS_SZ sizeof(unsigned int)
+#define BT_PACKET_DROPS_SZ sizeof(unsigned int)
+#define BT_PACKET_TIMESTAMP_SZ sizeof(unsigned long)
+#define BT_PACKET_RECORD_SZ sizeof(unsigned int)*4 + sizeof(unsigned long) //excludes the data field since thats only for the c library, in the actual file the unsigne int pointer takes up no size
+
 
 #define MAX_PKT_DESCR_LEN 80
 #define DATA_LINK_TYPE_RESERVED 1000
@@ -356,206 +371,240 @@ typedef struct hci_pkt_event{
 void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 
 	unsigned int _index = 0;
+	size_t descr_size;
 
 	hci_pkt_event_t *_hci_event = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
 	_hci_event->event_code = (uint16_t) record->data[1] & 0xFFFF;
 	_hci_event->param_len = record->data[2] & 0xFFFF;
 
 	pkt->event = _hci_event;
+
+	//print_hci_packet(pkt);
+
 	pkt->descr = (char *)malloc(sizeof(char)*MAX_PKT_DESCR_LEN);
-	memset(&pkt->descr,0x0,sizeof(pkt->descr));
+	//memset(&pkt->descr,0x0,sizeof(pkt->descr));
 
-	size_t descr_size;
-	//printf("\t[hci->event] event_code => '0x%.2x' : \n", _hci_event->event_code);
-
+	printf("\t[hci->event] event_code => '0x%.2x' : \n", _hci_event->event_code);
 	switch(_hci_event->event_code){
 
 		case HCI_EVENT_INQUIRY_COMPLETE: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);
 			strncpy(&pkt->descr,&event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_INQUIRY_RESULT: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_INQUIRY_RESULT-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_INQUIRY_RESULT-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_INQUIRY_RESULT-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_CONNECTION_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_CONNECTION_REQUEST:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_DISCONNECTION_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_AUTHENTICATION_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break; 
 
 		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_ENCRYPTION_CHANGE: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 	
 		case HCI_EVENT_QOS_SETUP_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_COMMAND_COMPLETE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_COMMAND_STATUS:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_COMMAND_STATUS-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_COMMAND_STATUS-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_HARDWARE_ERROR:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_HARDWARE_ERROR-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_HARDWARE_ERROR-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_HARDWARE_ERROR-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_FLUSH_OCCURED: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_FLUSH_OCCURED -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_FLUSH_OCCURED-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_FLUSH_OCCURED-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_ROLE_CHANGE: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_ROLE_CHANGE -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_ROLE_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_ROLE_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 		case HCI_EVENT_NUMBER_OF_PACKETS: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 	
 		case HCI_EVENT_MODE_CHANGE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MODE_CHANGE-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_MODE_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MODE_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 	
 		case HCI_EVENT_RETURN_LINK_KEYS:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_RETURN_LINK_KEYS -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_PIN_CODE_REQUEST:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_LINK_KEY_REQUEST :
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_LINK_KEY_NOTIFICATION :
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_LOOPBACK_COMMAND:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_DATA_BUFFER_OVERFLOW: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break; 
 
 		case HCI_EVENT_MAX_SLOTS_CHANGE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_READ_CLOCK_OFFSET: 
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_QOS_VIOLATION:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_QOS_VIOLATION -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_QOS_VIOLATION-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_QOS_VIOLATION-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1], descr_size);
 			//pkt->descr[descr_size] = '\0';
 			break;
 
 		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE:
+			printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE -1]);
 			descr_size = strlen(event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE-1]);
 			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE+1], descr_size);
 			//pkt->descr[descr_size] = '\0';
@@ -564,7 +613,7 @@ void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 		default:break;	
 	}
 
-	//printf("\t[hci->event] param_len => '0x%.2x' (%d) bytes\n",_hci_event->param_len,_hci_event->param_len);
+	printf("\t[hci->event] param_len => '0x%.2x' (%d) bytes\n",_hci_event->param_len,_hci_event->param_len);
 	return;
 }
 
@@ -856,45 +905,30 @@ void parse_hci(hci_pkt_t *pkt, btsnoop_packet_record_t* packet_record){
 	//printf("[*] parsing hci packet...\n");
 	//print_btpacket_record(0,packet_record);
 	
-	//printf("\t[hci] packet type -> [0x%.2x]\n",pkt_type);
+	printf("\t[hci] packet type -> [0x%.2x]\n",pkt_type);
 
 	switch(pkt_type){
 			case HCI_CMD_PKT:  
 					//printf(" HCI_CMD\n");	
-					parse_hci_cmd(pkt,packet_record);break;
+					parse_hci_cmd(pkt, packet_record);break;
 			case HCI_ASYNC_DATA_PKT:  
 					//printf(" HCI_ASYNC_DATA\n");	
-					parse_hci_async(pkt,packet_record);break;
+					parse_hci_async(pkt, packet_record);break;
 			case HCI_EVENT_PKT:  
-					//printf(" HCI_EVENT\n");	
-					parse_hci_event(pkt,packet_record);break;
+					printf(" HCI_EVENT\n");	
+					parse_hci_event(pkt, packet_record);break;
 			case HCI_EXT_CMD_PKT:  
 					//printf(" HCI_EXT_EVENT\n");	
-					parse_hci_event(pkt,packet_record);break;
+					parse_hci_event(pkt, packet_record);break;
 			case HCI_VENDOR_CMD_PKT:  
 					//printf(" HCI_VENDOR_CMD\n");	
-					parse_hci_event(pkt,packet_record);break;
-					parse_hci_vendorcmd(pkt,packet_record);break;
+					parse_hci_event(pkt, packet_record);break;
+					parse_hci_vendorcmd(pkt, packet_record);break;
 			default: printf("[x] problem determining cmd type...\n") ;break;
 	}		
 	return;
 }
 
-
-#define BT_FILE_MAGIC_SZ sizeof(unsigned char)*8
-#define BT_FILE_MAGIC_OFFSET 0
-#define BT_FILE_VERSION_SZ sizeof(unsigned int)
-#define BT_FILE_VERSION_OFFSET BT_FILE_MAGIC_OFFSET+BT_FILE_MAGIC_SZ
-#define BT_FILE_DATALINK_TYPE_SZ sizeof(unsigned int)
-#define BT_FILE_DATALINK_TYPE_OFFSET BT_FILE_VERSION_OFFSET+BT_FILE_VERSION_SZ
-#define BT_FILE_HEADER_SZ BT_FILE_MAGIC_SZ+BT_FILE_VERSION_SZ+BT_FILE_DATALINK_TYPE_SZ
-#define MAX_PACKET_LIST_SZ 1024
-#define BT_PACKET_ORIGLEN_SZ sizeof(unsigned int)
-#define BT_PACKET_INCLEN_SZ sizeof(unsigned int)
-#define BT_PACKET_FLAGS_SZ sizeof(unsigned int)
-#define BT_PACKET_DROPS_SZ sizeof(unsigned int)
-#define BT_PACKET_TIMESTAMP_SZ sizeof(unsigned long)
-#define BT_PACKET_RECORD_SZ sizeof(unsigned int)*4 + sizeof(unsigned long) //excludes the data field since thats only for the c library, in the actual file the unsigne int pointer takes up no size
 
 
 
