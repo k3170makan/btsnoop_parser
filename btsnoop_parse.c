@@ -231,7 +231,56 @@ const char* event_descriptions[] = {
 #define HCI_CMD_READ_PAGE_SCAN_MODE 0x003D
 #define HCI_CMD_WRITE_PAGE_SCAN_MODE 0x003E
 
-const char *cmd_descriptions[] = {
+/*OGF group 8*/
+
+#define LE_SET_EVENT_MASK 0x1
+#define LE_READ_BUFFER_SIZE 0x2
+#define LE_READ_LOCAL_SUPPORTED_FEATURES 0x3
+#define LE_SET_RANDOM_ADDRES 0x4
+#define LE_SET_ADVERTISING_PARAMETERS 0x5
+#define LE_READ_ADVERTISING_CHANNEL_TX_POWER 0x6
+#define LE_SET_ADVERTISING_DATA 0x7
+#define LE_SET_SCAN_RESPONSE_DATA 0x8
+#define LE_SET_ADVERTISE_ENABLE 0x9
+#define LE_SET_SCAN_PARAMETERS 0xA
+#define LE_SET_SCAN_ENABLE 0xB
+#define LE_CREATE_CONNECTION 0xC
+#define LE_CREATE_CONNECTION_CANCEL 0xD
+#define LE_READ_WHITE_LIST_SIZE 0xE
+#define LE_CLEAR_WHITE_LIST 0xF
+#define LE_ADD_DEVICE_TO_WHITE_LIST 0x10
+#define LE_REMOVE_DEVICE_FROM_WHITE_LIST 0x11
+#define LE_CONNECTION_UPDATE 0x12
+#define LE_SET_HOST_CHANNEL_CLASSIFICATION 0x13
+#define LE_READ_CHANNEL_MAP 0x14
+#define LE_READ_REMOTE_USED_FEATURES 0x15
+#define LE_ENCRYPT 0x16
+#define LE_RAND 0x17
+#define LE_START_ENCRYPTION 0x18
+#define LE_LONG_TERM_KEY_REQUESTED_REPLY 0x19
+#define LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY 0x20
+#define LE_READ_SUPPORTED_STATES 0x21
+#define LE_RECEIVER_TEST 0x22
+#define LE_TRANSMITTER_TEST 0x23
+#define LE_TEST_END_COMMAND 0x24
+#define LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY 0x25
+#define LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY 0x26
+#define LE_SET_DATA_LENGTH 0x27
+#define LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH 0x28
+#define LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH 0x29
+#define LE_READ_LOCAL_P256_PUBLIC_KEY 0x2A
+#define LE_GENERATE_DHKEY 0x2B
+#define LE_ADD_DEVICE_TO_RESOLVING_LIST 0x2C
+#define LE_REMOVE_DEVICE_FROM_RESOLVING_LIST 0x2D
+#define LE_CLEAR_RESOLVING_LIST 0x2E
+#define LE_READ_RESOLVING_LIST_SIZE 0x2F
+#define LE_READ_PEER_RESOLVABLE_ADDRESS 0x30
+#define LE_READ_LOCAL_RESOLVABLE_ADDRESS 0x31
+#define LE_SET_ADDRESS_RESOLUTION_ENABLE 0x32
+#define LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT 0x33
+#define LE_READ_MAXIMUM_DATA_LENGTH 0x34
+
+const char *cmd_descriptions_group_1[] = {
 "INQUIRY",
 "INQUIRY CANCEL",
 "PERIODIC INQUIRY MODE ",
@@ -255,6 +304,118 @@ const char *cmd_descriptions[] = {
 "READ REMOTE VERSION INFORMATION",
 "READ CLOCK OFFSET",0 };
 
+char *cmd_descriptions_group_2[]= {
+"HOLD MODE",
+"SNIFF MODE",
+"EXIT SNIFF MODE",
+"PARK MODE",
+"EXIT PARK MODE",
+"QOS SETUP",
+"ROLE DISCOVERY",
+"SWITCH ROLE",
+"READ LINK POLICY SETTINGS ",
+"WRITE LINK POLICY SETTINGS",0};
+
+char *cmd_descriptions_group_3[] = {
+ "SET EVENT MASK", /*0x01*/
+ "RESET", /*0x03*/
+ "SET EVENT FILTER", /*0x05*/
+ "FLUSH", /*0x08*/
+ "READ PIN TYPE", /*0x09*/
+ "WRITE PIN TYPE",
+ "CREATE NEW UNIT KEY",
+ "READ STORED LINK KEY",
+ "WRITE STORED LINK KEY",
+ "DELETE STORED LINK KEY",
+ "CHANGE LOCAL NAME",
+ "READ LOCAL NAME",
+ "READ CONNECTION ACCEPT TIMEOUT",
+ "WRITE CONNECTION ACCEPT TIMEOUT",
+ "READ PAGE TIMEOUT",
+ "WRITE PAGE TIMEOUT",
+ "READ SCAN ENABLE",
+ "WRITE SCAN ENABLE",
+ "READ PAGE SCAN ACTIVITY",
+ "WRITE PAGE SCAN ACTIVITY",
+ "READ INQUIRY SCAN ACTIVITY",
+ "WRITE INQUIRY SCAN ACTIVITY",
+ "READ AUTHENTICATION ENABLE",
+ "WRITE AUTHENTICATION ENABLE",
+ "READ ENCRYPTION MODE",
+ "WRITE ENCRYPTION MODE",
+ "READ DEVICE CLASS",
+ "WRITE DEVICE CLASS",
+ "READ VOICE SETTING",
+ "WRITE VOICE SETTING",
+ "READ AUTOMATIC FLUSH TIMEOUT",
+ "WRITE AUTOMATIC FLUSH TIMEOUT",
+ "READ NUM BROADCAST RETRANSMISSIONS",
+ "WRITE NUM BROADCAST RETRANSMISSIONS",
+ "READ HOLD MODE ACTIVITY",
+ "WRITE HOLD MODE ACTIVITY",
+ "READ TRANSMIT POWER LEVEL",
+ "READ SCO FLOW CONTROL ENABLE",
+ "WRITE SCO FLOW CONTROL ENABLE",
+ "SET HOST CONTROLLER TO HOST FLOW CONTROL",
+ "HOST BUFFER SIZE",
+ "NUMBER OF COMPLETED PACKETS",
+ "READ LINK SUPERVISION TIMEOUT",
+ "WRITE LINK SUPERVISION TIMEOUT",
+ "READ NUMBER OF SUPPORTED IAC",
+ "READ CURRENT IAC LAP",
+ "WRITE CURRENT IAC LAP",
+ "READ PAGE SCAN PERIOD MODE",
+ "WRITE PAGE SCAN PERIOD MODE",
+ "READ PAGE SCAN MODE",
+ "WRITE PAGE SCAN MODE",0};
+
+char *cmd_descriptions_group_8[] = {
+"LE SET EVENT MASK",
+"LE READ BUFFER SIZE",
+"LE READ LOCAL SUPPORTED FEATURES",
+"LE SET RANDOM ADDRES",
+"LE SET ADVERTISING PARAMETERS",
+"LE READ ADVERTISING CHANNEL TX POWER",
+"LE SET ADVERTISING DATA",
+"LE SET SCAN RESPONSE DATA",
+"LE SET ADVERTISE ENABLE",
+"LE SET SCAN PARAMETERS",
+"LE SET SCAN ENABLE",
+"LE CREATE CONNECTION",
+"LE CREATE CONNECTION CANCEL",
+"LE READ WHITE LIST SIZE",
+"LE CLEAR WHITE LIST",
+"LE ADD DEVICE TO WHITE LIST",
+"LE REMOVE DEVICE FROM WHITE LIST",
+"LE CONNECTION UPDATE",
+"LE SET HOST CHANNEL CLASSIFICATION",
+"LE READ CHANNEL MAP",
+"LE READ REMOTE USED FEATURES",
+"LE ENCRYPT",
+"LE RAND",
+"LE START ENCRYPTION",
+"LE LONG TERM KEY REQUESTED REPLY",
+"LE LONG TERM KEY REQUESTED NEGATIVE REPLY",
+"LE READ SUPPORTED STATES",
+"LE RECEIVER TEST",
+"LE TRANSMITTER TEST",
+"LE TEST END COMMAND",
+"LE REMOTE CONNECTION PARAMETER REQUEST REPLY",
+"LE REMOTE CONNECTION PARAMETER REQUEST NEGATIVE REPLY",
+"LE SET DATA LENGTH",
+"LE READ SUGGESTED DEFAULT DATA LENGTH",
+"LE WRITE SUGGESTED DEFAULT DATA LENGTH",
+"LE READ LOCAL P256 PUBLIC KEY",
+"LE GENERATE DHKEY",
+"LE ADD DEVICE TO RESOLVING LIST",
+"LE REMOVE DEVICE FROM RESOLVING LIST",
+"LE CLEAR RESOLVING LIST",
+"LE READ RESOLVING LIST SIZE",
+"LE READ PEER RESOLVABLE ADDRESS",
+"LE READ LOCAL RESOLVABLE ADDRESS",
+"LE SET ADDRESS RESOLUTION ENABLE",
+"LE SET RESOLVABLE PRIVATE ADDRESS TIMEOUT",
+"LE READ MAXIMUM DATA LENGTH",0};
 
 #define HCI_ASYNC_HANDLE_OFFSET 0x0
 #define HCI_ASYNC_HANDLE_SZ 12
@@ -373,226 +534,58 @@ void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	unsigned int _index = 0;
 	size_t descr_size;
 
-	hci_pkt_event_t *_hci_event = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
-	_hci_event->event_code = (uint16_t) record->data[1] & 0xFFFF;
-	_hci_event->param_len = record->data[2] & 0xFFFF;
+	hci_pkt_event_t *_event_pkt = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
+	_event_pkt->event_code = (uint16_t) record->data[1] & 0xFFFF;
+	_event_pkt->param_len = record->data[2] & 0xFFFF;
 
-	pkt->event = &_hci_event;
+	pkt->event = _event_pkt;
 
-	//print_hci_packet(pkt);
-
+	char *descr_p = NULL;
 	pkt->descr = (char *)malloc(sizeof(char)*MAX_PKT_DESCR_LEN);
-	//memset(&pkt->descr,0x0,sizeof(pkt->descr));
 
-	//printf("\t[hci->event] event_code => '0x%.2x' : \n", _hci_event->event_code);
-	switch(_hci_event->event_code){
-
-		case HCI_EVENT_INQUIRY_COMPLETE: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1]);
-			strncpy(&pkt->descr,&event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_INQUIRY_RESULT: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_INQUIRY_RESULT-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_INQUIRY_RESULT-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_INQUIRY_RESULT-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_CONNECTION_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_CONNECTION_REQUEST:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_DISCONNECTION_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_AUTHENTICATION_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break; 
-
-		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_ENCRYPTION_CHANGE: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1], descr_size);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1], descr_size);
-			break;
-	
-		case HCI_EVENT_QOS_SETUP_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1], descr_size);
-			break;
-
-		case HCI_EVENT_COMMAND_COMPLETE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1], descr_size);
-			printf("[hci->event] desc => '%s'\n", pkt->descr);
-			//pkt->descr[descr_size] = '\0';
-			break;
-
-		case HCI_EVENT_COMMAND_STATUS:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_COMMAND_STATUS-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_COMMAND_STATUS-1], descr_size);
-			break;
-
-		case HCI_EVENT_HARDWARE_ERROR:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_HARDWARE_ERROR-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_HARDWARE_ERROR-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_HARDWARE_ERROR-1], descr_size);
-			break;
-
-		case HCI_EVENT_FLUSH_OCCURED: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_FLUSH_OCCURED -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_FLUSH_OCCURED-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_FLUSH_OCCURED-1], descr_size);
-			break;
-
-		case HCI_EVENT_ROLE_CHANGE: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_ROLE_CHANGE -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_ROLE_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_ROLE_CHANGE-1], descr_size);
-			break;
-		case HCI_EVENT_NUMBER_OF_PACKETS: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1], descr_size);
-			break;
-	
-		case HCI_EVENT_MODE_CHANGE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MODE_CHANGE-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_MODE_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MODE_CHANGE-1], descr_size);
-			break;
-	
-		case HCI_EVENT_RETURN_LINK_KEYS:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_RETURN_LINK_KEYS -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1], descr_size);
-			break;
-
-		case HCI_EVENT_PIN_CODE_REQUEST:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1], descr_size);
-			break;
-
-		case HCI_EVENT_LINK_KEY_REQUEST :
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1], descr_size);
-			break;
-
-		case HCI_EVENT_LINK_KEY_NOTIFICATION :
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1], descr_size);
-			break;
-
-		case HCI_EVENT_LOOPBACK_COMMAND:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1], descr_size);
-			break;
-
-		case HCI_EVENT_DATA_BUFFER_OVERFLOW: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1], descr_size);
-			break; 
-
-		case HCI_EVENT_MAX_SLOTS_CHANGE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1], descr_size);
-			break;
-
-		case HCI_EVENT_READ_CLOCK_OFFSET: 
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1], descr_size);
-			break;
-
-		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1], descr_size);
-			break;
-
-		case HCI_EVENT_QOS_VIOLATION:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_QOS_VIOLATION -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_QOS_VIOLATION-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_QOS_VIOLATION-1], descr_size);
-			break;
-
-		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1], descr_size);
-			break;
-
-		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE:
-			//printf("[hci->event] desc => '%s'\n", event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE -1]);
-			descr_size = strlen(event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE-1]);
-			strncpy(&pkt->descr, &event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE+1], descr_size);
-			break;
-
+	switch(_event_pkt->event_code){
+		case HCI_EVENT_INQUIRY_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1];break;
+		case HCI_EVENT_INQUIRY_RESULT: pkt->descr = event_descriptions[HCI_EVENT_INQUIRY_RESULT-1];break;
+		case HCI_EVENT_CONNECTION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1];break;
+		case HCI_EVENT_CONNECTION_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1];break;
+		case HCI_EVENT_DISCONNECTION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1];break;
+		case HCI_EVENT_AUTHENTICATION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1];break;
+		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1];break;
+		case HCI_EVENT_ENCRYPTION_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1];break;
+		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1];break;
+		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE : pkt->descr = event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1];break;
+		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1];break;
+		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1];break;
+		case HCI_EVENT_QOS_SETUP_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1];break;
+		case HCI_EVENT_COMMAND_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1];break;
+		case HCI_EVENT_COMMAND_STATUS: pkt->descr = event_descriptions[HCI_EVENT_COMMAND_STATUS-1];break;
+		case HCI_EVENT_HARDWARE_ERROR: pkt->descr = event_descriptions[HCI_EVENT_HARDWARE_ERROR-1];break;
+		case HCI_EVENT_FLUSH_OCCURED: pkt->descr = event_descriptions[HCI_EVENT_FLUSH_OCCURED-1];break;
+		case HCI_EVENT_ROLE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_ROLE_CHANGE-1];break;
+		case HCI_EVENT_NUMBER_OF_PACKETS: pkt->descr = event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1];break;
+		case HCI_EVENT_MODE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_MODE_CHANGE-1];break;
+		case HCI_EVENT_RETURN_LINK_KEYS: pkt->descr = event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1];break;
+		case HCI_EVENT_PIN_CODE_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1];break;
+		case HCI_EVENT_LINK_KEY_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1];break;
+		case HCI_EVENT_LINK_KEY_NOTIFICATION: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1];break;
+		case HCI_EVENT_LOOPBACK_COMMAND: pkt->descr = event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1];break;
+		case HCI_EVENT_DATA_BUFFER_OVERFLOW: pkt->descr = event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1];break;
+		case HCI_EVENT_MAX_SLOTS_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1];break;
+		case HCI_EVENT_READ_CLOCK_OFFSET: pkt->descr = event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1];break;
+		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1];break;
+		case HCI_EVENT_QOS_VIOLATION: pkt->descr = event_descriptions[HCI_EVENT_QOS_VIOLATION-1];break;
+		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1];break;
+		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE-1];break;
 		default:break;	
 	}
+
+	printf("\t\tHCI EVENT[%s] {\n",pkt->descr);				
+	printf("\t\t* event code -> '0x%.4x'\n",
+		_event_pkt->event_code);
+	printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
+		_event_pkt->param_len,
+		_event_pkt->param_len);
+	printf("\t\t}\n");
 
 	return;
 }
@@ -605,8 +598,9 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	unsigned int _index = 0;
 
 	hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t *) malloc(sizeof(hci_pkt_cmd_t));
-	pkt->cmd = _cmd_pkt;
+	pkt->cmd = &_cmd_pkt;
 
+	char *descr_p = NULL;
 	size_t descr_size;
 	pkt->descr = (char *)malloc(sizeof(char)*MAX_PKT_DESCR_LEN);
 
@@ -627,242 +621,177 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	switch(OGF(_cmd_pkt->opcode)){
 		case 0x01:
 			switch(OCF(_cmd_pkt->opcode)){
-				case HCI_CMD_INQUIRY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_INQUIRY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_INQUIRY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_INQUIRY-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_INQUIRY_CANCEL:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_INQUIRY_CANCEL-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_INQUIRY_CANCEL-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_INQUIRY_CANCEL-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-			
-				case HCI_CMD_PERIODIC_INQUIRY_MODE: 
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_PERIODIC_INQUIRY_MODE-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_PERIODIC_INQUIRY_MODE-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_PERIODIC_INQUIRY_MODE-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_PERIODIC_INQUIRY_MODE-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_CREATE_CONNECTION:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_CREATE_CONNECTION-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_CREATE_CONNECTION-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_CREATE_CONNECTION-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_DISCONNECT:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_DISCONNECT-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_DISCONNECT-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_DISCONNECT-1], descr_size);
-					//pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_ADD_SCO_CONNECTION: 
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_DISCONNECT-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_ADD_SCO_CONNECTION-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_ADD_SCO_CONNECTION-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_ACCEPT_CONNECTION_REQUEST:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_ACCEPT_CONNECTION_REQUEST-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_ACCEPT_CONNECTION_REQUEST-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_ACCEPT_CONNECTION_REQUEST-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_REJECT_CONNECTION_REQUEST:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_REJECT_CONNECTION_REQUEST-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_REJECT_CONNECTION_REQUEST-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_REJECT_CONNECTION_REQUEST-1], descr_size);
-					//&&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_LINK_KEY_REQUEST_REPLY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_REPLY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_REPLY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_REPLY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_PINCODE_REQUEST_REPLY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_PINCODE_REQUEST_REPLY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_PINCODE_REQUEST_REPLY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_PINCODE_REQUEST_REPLY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY:
-
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_AUTHENTICATION_REQUESTED:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_AUTHENTICATION_REQUESTED-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_AUTHENTICATION_REQUESTED-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_AUTHENTICATION_REQUESTED-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_SET_CONNECTION_ENCRYPTION:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_SET_CONNECTION_ENCRYPTION-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_SET_CONNECTION_ENCRYPTION-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_SET_CONNECTION_ENCRYPTION-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_CHANGE_CONNECTION_LINK_KEY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_LINK_KEY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_LINK_KEY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_CHANGE_CONNECTION_LINK_KEY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_MASTER_LINK_KEY:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_MASTER_LINK_KEY-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_MASTER_LINK_KEY-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_MASTER_LINK_KEY-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_REMOTE_NAME_REQUEST:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_REMOTE_NAME_REQUEST-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_REMOTE_NAME_REQUEST-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_REMOTE_NAME_REQUEST-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_READ_REMOTE_VERSION_INFORMATION:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_READ_REMOTE_VERSION_INFORMATION-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_READ_REMOTE_VERSION_INFORMATION-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_READ_REMOTE_VERSION_INFORMATION-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
-
-				case HCI_CMD_READ_CLOCK_OFFSET:
-					printf("[?] cmd %s\n",cmd_descriptions[HCI_CMD_READ_CLOCK_OFFSET-1]); 
-					descr_size = strlen(cmd_descriptions[HCI_CMD_READ_CLOCK_OFFSET-1]); 
-					strncpy(&pkt->descr, &cmd_descriptions[HCI_CMD_READ_CLOCK_OFFSET-1], descr_size);
-					//&pkt->descr[descr_size] = '\0';
-					break;
+				case HCI_CMD_INQUIRY:                         pkt->descr = cmd_descriptions_group_1[0];break;
+				case HCI_CMD_INQUIRY_CANCEL:                  pkt->descr = cmd_descriptions_group_1[1];break;
+				case HCI_CMD_PERIODIC_INQUIRY_MODE:           pkt->descr = cmd_descriptions_group_1[2];break;
+				case HCI_CMD_EXIT_PERIODIC_INQUIRY_MODE:      pkt->descr = cmd_descriptions_group_1[3];break;
+				case HCI_CMD_CREATE_CONNECTION:               pkt->descr = cmd_descriptions_group_1[4];break;
+				case HCI_CMD_DISCONNECT:                      pkt->descr = cmd_descriptions_group_1[5];break;
+				case HCI_CMD_ADD_SCO_CONNECTION:              pkt->descr = cmd_descriptions_group_1[6];break;
+				case HCI_CMD_ACCEPT_CONNECTION_REQUEST:       pkt->descr = cmd_descriptions_group_1[7];break;
+				case HCI_CMD_REJECT_CONNECTION_REQUEST:       pkt->descr = cmd_descriptions_group_1[8];break;
+				case HCI_CMD_LINK_KEY_REQUEST_REPLY:          pkt->descr = cmd_descriptions_group_1[9];break;
+				case HCI_CMD_LINK_KEY_REQUEST_NEGATIVE_REPLY: pkt->descr = cmd_descriptions_group_1[10];break;
+				case HCI_CMD_PINCODE_REQUEST_REPLY:           pkt->descr = cmd_descriptions_group_1[11];break;
+				case HCI_CMD_PINCODE_REQUEST_NEGATIVE_REPLY:  pkt->descr = cmd_descriptions_group_1[12];break;
+				case HCI_CMD_CHANGE_CONNECTION_PACKET_TYPE:   pkt->descr = cmd_descriptions_group_1[13];break;
+				case HCI_CMD_AUTHENTICATION_REQUESTED:        pkt->descr = cmd_descriptions_group_1[14];break;
+				case HCI_CMD_SET_CONNECTION_ENCRYPTION:       pkt->descr = cmd_descriptions_group_1[15];break;
+				case HCI_CMD_CHANGE_CONNECTION_LINK_KEY:      pkt->descr = cmd_descriptions_group_1[16];break;
+				case HCI_CMD_MASTER_LINK_KEY:                 pkt->descr = cmd_descriptions_group_1[17];break;
+				case HCI_CMD_REMOTE_NAME_REQUEST:             pkt->descr = cmd_descriptions_group_1[18];break;
+				case HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES:  pkt->descr = cmd_descriptions_group_1[19];break;
+				case HCI_CMD_READ_REMOTE_VERSION_INFORMATION: pkt->descr = cmd_descriptions_group_1[20];break;
+				case HCI_CMD_READ_CLOCK_OFFSET:               pkt->descr = cmd_descriptions_group_1[21];break;
+				default: break;
 			}break;
+
 			case 0x02:
 				switch(OCF(_cmd_pkt->opcode)){
-					case HCI_CMD_HOLD_MODE:;break;
-					case HCI_CMD_SNIFF_MODE:;break;
-					case HCI_CMD_EXIT_SNIFF_MODE:;break;
-					case HCI_CMD_PARK_MODE: ;break;
-					case HCI_CMD_EXIT_PARK_MODE:;break;
-					case HCI_CMD_QOS_SETUP:;break;
-					case HCI_CMD_ROLE_DISCOVERY:;break;
-					case HCI_CMD_SWITCH_ROLE:;break;
-					case HCI_CMD_READ_LINK_POLICY_SETTINGS:;break;
-					case HCI_CMD_WRITE_LINK_POLICY_SETTINGS:;break;
+					case HCI_CMD_HOLD_MODE:                  pkt->descr =  cmd_descriptions_group_2[0];break;
+ 					case HCI_CMD_SNIFF_MODE:                 pkt->descr =  cmd_descriptions_group_2[1];break;
+ 					case HCI_CMD_EXIT_SNIFF_MODE:            pkt->descr =  cmd_descriptions_group_2[2];break;
+ 					case HCI_CMD_PARK_MODE:                  pkt->descr =  cmd_descriptions_group_2[3];break;
+ 					case HCI_CMD_EXIT_PARK_MODE:             pkt->descr =  cmd_descriptions_group_2[4];break;
+ 					case HCI_CMD_QOS_SETUP:                  pkt->descr =  cmd_descriptions_group_2[5];break;
+ 					case HCI_CMD_ROLE_DISCOVERY:             pkt->descr =  cmd_descriptions_group_2[6];break;
+ 					case HCI_CMD_SWITCH_ROLE:                pkt->descr =  cmd_descriptions_group_2[7];break;
+ 					case HCI_CMD_READ_LINK_POLICY_SETTINGS:  pkt->descr =  cmd_descriptions_group_2[8];break;
+ 					case HCI_CMD_WRITE_LINK_POLICY_SETTINGS: pkt->descr =  cmd_descriptions_group_2[9];break;
+ 					default: break;
 				};break;
+
 			case 0x03:
 				switch(OCF(_cmd_pkt->opcode)){
-					case HCI_CMD_SET_EVENT_MASK:;break;
-					case HCI_CMD_RESET:;break;
-					case HCI_CMD_SET_EVENT_FILTER:;break;
-					case HCI_CMD_FLUSH:;break;
-					case HCI_CMD_READ_PIN_TYPE:;break;
-					case HCI_CMD_WRITE_PIN_TYPE:;break;
-					case HCI_CMD_CREATE_NEW_UNIT_KEY:;break;
-					case HCI_CMD_READ_STORED_LINK_KEY:;break;
-					case HCI_CMD_WRITE_STORED_LINK_KEY:;break;
-					case HCI_CMD_DELETE_STORED_LINK_KEY:;break;
-					case HCI_CMD_CHANGE_LOCAL_NAME:;break;
-					case HCI_CMD_READ_LOCAL_NAME:;break;
-					case HCI_CMD_READ_CONNECTION_ACCEPT_TIMEOUT:;break;
-					case HCI_CMD_WRITE_CONNECTION_ACCEPT_TIMEOUT:;break;
-					case HCI_CMD_READ_PAGE_TIMEOUT:;break;
-					case HCI_CMD_WRITE_PAGE_TIMEOUT:;break;
-					case HCI_CMD_READ_SCAN_ENABLE:;break;
-					case HCI_CMD_WRITE_SCAN_ENABLE:;break;
-					case HCI_CMD_READ_PAGE_SCAN_ACTIVITY:;break;
-					case HCI_CMD_WRITE_PAGE_SCAN_ACTIVITY:;break;
-					case HCI_CMD_READ_INQUIRY_SCAN_ACTIVITY:;break;
-					case HCI_CMD_WRITE_INQUIRY_SCAN_ACTIVITY:;break;
-					case HCI_CMD_READ_AUTHENTICATION_ENABLE:;break;
-					case HCI_CMD_WRITE_AUTHENTICATION_ENABLE:;break;
-					case HCI_CMD_READ_ENCRYPTION_MODE:;break;
-					case HCI_CMD_WRITE_ENCRYPTION_MODE:;break;
-					case HCI_CMD_READ_DEVICE_CLASS:;break;
-					case HCI_CMD_WRITE_DEVICE_CLASS:;break;
-					case HCI_CMD_READ_VOICE_SETTING:;break;
-					case HCI_CMD_WRITE_VOICE_SETTING:;break;
-					case HCI_CMD_READ_AUTOMATIC_FLUSH_TIMEOUT:;break;
-					case HCI_CMD_WRITE_AUTOMATIC_FLUSH_TIMEOUT:;break;
-					case HCI_CMD_READ_NUM_BROADCAST_RETRANSMISSIONS:;break;
-					case HCI_CMD_WRITE_NUM_BROADCAST_RETRANSMISSIONS:;break;
-					case HCI_CMD_READ_HOLD_MODE_ACTIVITY:;break;
-					case HCI_CMD_WRITE_HOLD_MODE_ACTIVITY:;break;
-					case HCI_CMD_READ_TRANSMIT_POWER_LEVEL:;break;
-					case HCI_CMD_READ_SCO_FLOW_CONTROL_ENABLE:;break;
-					case HCI_CMD_WRITE_SCO_FLOW_CONTROL_ENABLE:;break;
-					case HCI_CMD_SET_HOST_CONTROLLER_TO_HOST_FLOW_CONTROL:;break;
-					case HCI_CMD_HOST_BUFFER_SIZE:;break;
-					case HCI_CMD_NUMBER_OF_COMPLETED_PACKETS:;break;
-					case HCI_CMD_READ_LINK_SUPERVISION_TIMEOUT:;break;
-					case HCI_CMD_WRITE_LINK_SUPERVISION_TIMEOUT:;break;
-					case HCI_CMD_READ_NUMBER_OF_SUPPORTED_IAC:;break;
-					case HCI_CMD_READ_CURRENT_IAC_LAP:;break;
-					case HCI_CMD_WRITE_CURRENT_IAC_LAP:;break;
-					case HCI_CMD_READ_PAGE_SCAN_PERIOD_MODE:;break;
-					case HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE:;break;
-					case HCI_CMD_READ_PAGE_SCAN_MODE:;break;
-					case HCI_CMD_WRITE_PAGE_SCAN_MODE:;break;
-				
+					case HCI_CMD_SET_EVENT_MASK: pkt->descr =  cmd_descriptions_group_3[0];break;
+					case HCI_CMD_RESET: pkt->descr =  cmd_descriptions_group_3[1];break;
+					case HCI_CMD_SET_EVENT_FILTER: pkt->descr =  cmd_descriptions_group_3[2];break;
+					case HCI_CMD_FLUSH:pkt->descr =  cmd_descriptions_group_3[3];break;
+					case HCI_CMD_READ_PIN_TYPE:pkt->descr =  cmd_descriptions_group_3[4];break;
+					case HCI_CMD_WRITE_PIN_TYPE:pkt->descr =  cmd_descriptions_group_3[5];break;
+					case HCI_CMD_CREATE_NEW_UNIT_KEY:pkt->descr =  cmd_descriptions_group_3[6];break;
+					case HCI_CMD_READ_STORED_LINK_KEY:pkt->descr =  cmd_descriptions_group_3[7];break;
+					case HCI_CMD_WRITE_STORED_LINK_KEY:pkt->descr =  cmd_descriptions_group_3[8];break;
+					case HCI_CMD_DELETE_STORED_LINK_KEY:pkt->descr =  cmd_descriptions_group_3[9];break;
+					case HCI_CMD_CHANGE_LOCAL_NAME:pkt->descr =  cmd_descriptions_group_3[10];break;
+					case HCI_CMD_READ_LOCAL_NAME:pkt->descr =  cmd_descriptions_group_3[11];break;
+					case HCI_CMD_READ_CONNECTION_ACCEPT_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[12];break;
+					case HCI_CMD_WRITE_CONNECTION_ACCEPT_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[13];break;
+					case HCI_CMD_READ_PAGE_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[14];break;
+					case HCI_CMD_WRITE_PAGE_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[15];break;
+					case HCI_CMD_READ_SCAN_ENABLE:pkt->descr =  cmd_descriptions_group_3[16];break;
+					case HCI_CMD_WRITE_SCAN_ENABLE:pkt->descr =  cmd_descriptions_group_3[17];break;
+					case HCI_CMD_READ_PAGE_SCAN_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[18];break;
+					case HCI_CMD_WRITE_PAGE_SCAN_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[19];break;
+					case HCI_CMD_READ_INQUIRY_SCAN_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[20];break;
+					case HCI_CMD_WRITE_INQUIRY_SCAN_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[21];break;
+					case HCI_CMD_READ_AUTHENTICATION_ENABLE:pkt->descr =  cmd_descriptions_group_3[22];break;
+					case HCI_CMD_WRITE_AUTHENTICATION_ENABLE:pkt->descr =  cmd_descriptions_group_3[23];break;
+					case HCI_CMD_READ_ENCRYPTION_MODE:pkt->descr =  cmd_descriptions_group_3[24];break;
+					case HCI_CMD_WRITE_ENCRYPTION_MODE:pkt->descr =  cmd_descriptions_group_3[25];break;
+					case HCI_CMD_READ_DEVICE_CLASS:pkt->descr =  cmd_descriptions_group_3[26];break;
+					case HCI_CMD_WRITE_DEVICE_CLASS:pkt->descr =  cmd_descriptions_group_3[27];break;
+					case HCI_CMD_READ_VOICE_SETTING:pkt->descr =  cmd_descriptions_group_3[28];break;
+					case HCI_CMD_WRITE_VOICE_SETTING:pkt->descr =  cmd_descriptions_group_3[29];break;
+					case HCI_CMD_READ_AUTOMATIC_FLUSH_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[30];break;
+					case HCI_CMD_WRITE_AUTOMATIC_FLUSH_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[31];break;
+					case HCI_CMD_READ_NUM_BROADCAST_RETRANSMISSIONS:pkt->descr =  cmd_descriptions_group_3[32];break;
+					case HCI_CMD_WRITE_NUM_BROADCAST_RETRANSMISSIONS:pkt->descr =  cmd_descriptions_group_3[33];break;
+					case HCI_CMD_READ_HOLD_MODE_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[34];break;
+					case HCI_CMD_WRITE_HOLD_MODE_ACTIVITY:pkt->descr =  cmd_descriptions_group_3[35];break;
+					case HCI_CMD_READ_TRANSMIT_POWER_LEVEL:pkt->descr =  cmd_descriptions_group_3[36];break;
+					case HCI_CMD_READ_SCO_FLOW_CONTROL_ENABLE:pkt->descr =  cmd_descriptions_group_3[37];break;
+					case HCI_CMD_WRITE_SCO_FLOW_CONTROL_ENABLE:pkt->descr =  cmd_descriptions_group_3[38];break;
+					case HCI_CMD_SET_HOST_CONTROLLER_TO_HOST_FLOW_CONTROL:pkt->descr =  cmd_descriptions_group_3[39];break;
+					case HCI_CMD_HOST_BUFFER_SIZE:pkt->descr =  cmd_descriptions_group_3[40];break;
+					case HCI_CMD_NUMBER_OF_COMPLETED_PACKETS:pkt->descr =  cmd_descriptions_group_3[41];break;
+					case HCI_CMD_READ_LINK_SUPERVISION_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[42];break;
+					case HCI_CMD_WRITE_LINK_SUPERVISION_TIMEOUT:pkt->descr =  cmd_descriptions_group_3[43];break;
+					case HCI_CMD_READ_NUMBER_OF_SUPPORTED_IAC:pkt->descr =  cmd_descriptions_group_3[44];break;
+					case HCI_CMD_READ_CURRENT_IAC_LAP:pkt->descr =  cmd_descriptions_group_3[45];break;
+					case HCI_CMD_WRITE_CURRENT_IAC_LAP:pkt->descr =  cmd_descriptions_group_3[46];break;
+					case HCI_CMD_READ_PAGE_SCAN_PERIOD_MODE:pkt->descr =  cmd_descriptions_group_3[47];break;
+					case HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE:pkt->descr =  cmd_descriptions_group_3[48];break;
+					case HCI_CMD_READ_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[49];break;
+					case HCI_CMD_WRITE_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[50];break;
 				};break;
+			case 0x04:
+				switch(OCF(_cmd_pkt->opcode)){
+				};break;
+			case 0x05:
+				switch(OCF(_cmd_pkt->opcode)){
+				};break;
+			case 0x06:
+				switch(OCF(_cmd_pkt->opcode)){
+				};break;
+			case 0x07:
+				switch(OCF(_cmd_pkt->opcode)){
+				};break;
+			case 0x08:
+				switch(OCF(_cmd_pkt->opcode)){
+					case LE_SET_EVENT_MASK : pkt->descr = cmd_descriptions_group_8[0x1];break;
+					case LE_READ_BUFFER_SIZE : pkt->descr = cmd_descriptions_group_8[0x2];break;
+					case LE_READ_LOCAL_SUPPORTED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x3];break;
+					case LE_SET_RANDOM_ADDRES : pkt->descr = cmd_descriptions_group_8[0x4];break;
+					case LE_SET_ADVERTISING_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x5];break;
+					case LE_READ_ADVERTISING_CHANNEL_TX_POWER : pkt->descr = cmd_descriptions_group_8[0x6];break;
+					case LE_SET_ADVERTISING_DATA : pkt->descr = cmd_descriptions_group_8[0x7];break;
+					case LE_SET_SCAN_RESPONSE_DATA : pkt->descr = cmd_descriptions_group_8[0x8];break;
+					case LE_SET_ADVERTISE_ENABLE : pkt->descr = cmd_descriptions_group_8[0x9];break;
+					case LE_SET_SCAN_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0xA];break;
+					case LE_SET_SCAN_ENABLE : pkt->descr = cmd_descriptions_group_8[0xB];break;
+					case LE_CREATE_CONNECTION : pkt->descr = cmd_descriptions_group_8[0xC];break;
+					case LE_CREATE_CONNECTION_CANCEL : pkt->descr = cmd_descriptions_group_8[0xD];break;
+					case LE_READ_WHITE_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0xE];break;
+					case LE_CLEAR_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xF];break;
+					case LE_ADD_DEVICE_TO_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xA];break;
+					case LE_REMOVE_DEVICE_FROM_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0x10];break;
+					case LE_CONNECTION_UPDATE : pkt->descr = cmd_descriptions_group_8[0x11];break;
+					case LE_SET_HOST_CHANNEL_CLASSIFICATION : pkt->descr = cmd_descriptions_group_8[0x12];break;
+					case LE_READ_CHANNEL_MAP : pkt->descr = cmd_descriptions_group_8[0x13];break;
+					case LE_READ_REMOTE_USED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x14];break;
+					case LE_ENCRYPT : pkt->descr = cmd_descriptions_group_8[0x15];break;
+					case LE_RAND : pkt->descr = cmd_descriptions_group_8[0x16];break;
+					case LE_START_ENCRYPTION : pkt->descr = cmd_descriptions_group_8[0x17];break;
+					case LE_LONG_TERM_KEY_REQUESTED_REPLY : pkt->descr = cmd_descriptions_group_8[0x18];break;
+					case LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x19];break;
+					case LE_READ_SUPPORTED_STATES : pkt->descr = cmd_descriptions_group_8[0x1A];break;
+					case LE_RECEIVER_TEST : pkt->descr = cmd_descriptions_group_8[0x1B];break;
+					case LE_TRANSMITTER_TEST : pkt->descr = cmd_descriptions_group_8[0x1C];break;
+					case LE_TEST_END_COMMAND : pkt->descr = cmd_descriptions_group_8[0x1D];break;
+					case LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY : pkt->descr = cmd_descriptions_group_8[0x1E];break;
+					case LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x1F];break;
+					case LE_SET_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x20];break;
+					case LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x21];break;
+					case LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x22];break;
+					case LE_READ_LOCAL_P256_PUBLIC_KEY : pkt->descr = cmd_descriptions_group_8[0x23];break;
+					case LE_GENERATE_DHKEY : pkt->descr = cmd_descriptions_group_8[0x24];break;
+					case LE_ADD_DEVICE_TO_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x25];break;
+					case LE_REMOVE_DEVICE_FROM_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x26];break;
+					case LE_CLEAR_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x27];break;
+					case LE_READ_RESOLVING_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0x28];break;
+					case LE_READ_PEER_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x29];break;
+					case LE_READ_LOCAL_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x2A];break;
+					case LE_SET_ADDRESS_RESOLUTION_ENABLE : pkt->descr = cmd_descriptions_group_8[0x30];break;
+					case LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT : pkt->descr = cmd_descriptions_group_8[0x31];break;
+					case LE_READ_MAXIMUM_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x32];break;
+
+				};break;
+			default: ;break;
 	}	
-	//printf("\t\tHCI CMD: [%s] {\n",
-	//			pkt->descr);				
-	//printf("\t\t* opcode -> '0x%.4x'\n",
-	//	_cmd_pkt->opcode);
-	//printf("\t\t* opcode group   -> '0x%.2x'\n",
-	//	OGF(_cmd_pkt->opcode));
-	//printf("\t\t* opcode command -> '0x%.2x'\n",
-	//	OCF(_cmd_pkt->opcode));
-	//printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-	//	_cmd_pkt->param_len,
-	//		_cmd_pkt->param_len);
-	//printf("\t\t}\n");
+
+	printf("\t\tHCI CMD: [%s] {\n",
+				pkt->descr);				
+	printf("\t\t* opcode -> '0x%.4x'\n",
+		_cmd_pkt->opcode);
+	printf("\t\t* opcode group   -> '0x%.2x'\n",
+		OGF(_cmd_pkt->opcode));
+	printf("\t\t* opcode command -> '0x%.2x'\n",
+		OCF(_cmd_pkt->opcode));
+	printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
+		_cmd_pkt->param_len,
+			_cmd_pkt->param_len);
+	printf("\t\t}\n");
 	
 	return;
 }
@@ -895,10 +824,10 @@ void parse_hci(hci_pkt_t *pkt, btsnoop_packet_record_t* packet_record){
 					//printf(" HCI_ASYNC_DATA\n");	
 					parse_hci_async(pkt, packet_record);break;
 			case HCI_EVENT_PKT:  
-					printf(" HCI_EVENT\n");	
+					//printf(" HCI_EVENT\n");	
 					parse_hci_event(pkt, packet_record);break;
 			case HCI_EXT_CMD_PKT:  
-					printf(" HCI_EXT_EVENT\n");	
+					//printf(" HCI_EXT_EVENT\n");	
 					parse_hci_event(pkt, packet_record);break;
 			case HCI_VENDOR_CMD_PKT:  
 					//printf(" HCI_VENDOR_CMD\n");	
@@ -1120,7 +1049,7 @@ void print_btpacket_record_withhci(unsigned int offset,
 		//print hci data
 		hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
 		if(_cmd_pkt != NULL){ //gotta check for cmd sonner
-			hci_pkt_cmd_t *_cmd_pkt = &_hci_pkt->cmd;
+			hci_pkt_cmd_t *_cmd_pkt = _hci_pkt->cmd;
 
 			printf("\t\tHCI CMD: [%s] {",
 				_hci_pkt->descr);				
@@ -1139,7 +1068,7 @@ void print_btpacket_record_withhci(unsigned int offset,
 					_cmd_pkt->param_len);
 
 		}else if(_hci_pkt->event){
-			hci_pkt_event_t *_event_pkt = &_hci_pkt->event;
+			hci_pkt_event_t *_event_pkt = _hci_pkt->event;
 
 			printf("\t\tHCI EVENT:%s {");				
 			printf("\t\t* event code -> '0x%.4x'\n",
@@ -1166,7 +1095,7 @@ void print_hci_packet(hci_pkt_t * _hci_pkt){
 		hci_pkt_event_t *_event_pkt = (hci_pkt_event_t*) _hci_pkt->event;
 
 		if(_cmd_pkt != NULL){ //gotta check for cmd sonner
-			hci_pkt_cmd_t *_cmd_pkt = &_hci_pkt->cmd;
+			hci_pkt_cmd_t *_cmd_pkt = _hci_pkt->cmd;
 
 			printf("\t\tHCI CMD: [%s] {",
 				_hci_pkt->descr);				
@@ -1538,3 +1467,4 @@ int main(int argc, char **argv){
 	}
 	return 0;
 }
+
