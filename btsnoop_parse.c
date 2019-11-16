@@ -16,6 +16,9 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <time.h>
+
+
+
 /**
 http://www.fte.com/webhelp/bpa600/Content/Technical_Information/BT_Snoop_File_Format.htm
 
@@ -717,6 +720,13 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 				};break;
 			case 0x04:
 				switch(OCF(_cmd_pkt->opcode)){
+					case READ_AUTHENTICATED_PAYLOAD_TIMEOUT: pkt->descr = cmd_descriptions_group_4[0];break;
+					case WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT:pkt->descr = cmd_descriptions_group_4[1];break;
+					case READ_LOCAL_VERSION_INFORMATION:pkt->descr = cmd_descriptions_group_4[2];break;
+					case READ_LOCAL_SUPPORTED_COMMANDS:pkt->descr = cmd_descriptions_group_4[3];break;
+					case READ_LOCAL_SUPPORTED_FEATURES:pkt->descr = cmd_descriptions_group_4[4];break;
+					case READ_BD_ADDR:pkt->descr = cmd_descriptions_group_4[5];break;
+					case READ_RSSI:pkt->descr = cmd_descriptions_group_4[6];break;
 				};break;
 			case 0x05:
 				switch(OCF(_cmd_pkt->opcode)){
@@ -1467,4 +1477,22 @@ int main(int argc, char **argv){
 	}
 	return 0;
 }
+
+#define READ_AUTHENTICATED_PAYLOAD_TIMEOUT 0x123
+#define WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT 0x124
+#define READ_LOCAL_VERSION_INFORMATION 0x001
+#define READ_LOCAL_SUPPORTED_COMMANDS	0x002
+#define READ_LOCAL_SUPPORTED_FEATURES	0x003
+#define READ_BD_ADDR 0x009
+#define READ_RSSI 0x005
+
+char *cmd_descriptions_group_4[] = {
+"READ_AUTHENTICATED_PAYLOAD_TIMEOUT",
+"WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT",
+"READ_LOCAL_VERSION_INFORMATION",
+"READ_LOCAL_SUPPORTED_COMMANDS",
+"READ_LOCAL_SUPPORTED_FEATURES",
+"READ_BD_ADDR ",
+"READ_RSSI ",0};
+
 
