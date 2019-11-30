@@ -6,6 +6,7 @@
 		- finish the bt_packet_record_t->flags interpetation and printing
 		- finish the bt_packet_record_t->timestamp printing, currently printing not enough or wrong
 		- add hci packet decoding support
+		- printout data fields for hci_packetw
 		- printout uuids and devices found
 		-
 */
@@ -236,52 +237,72 @@ const char* event_descriptions[] = {
 
 /*OGF group 8*/
 
-#define LE_SET_EVENT_MASK 0x1
-#define LE_READ_BUFFER_SIZE 0x2
-#define LE_READ_LOCAL_SUPPORTED_FEATURES 0x3
-#define LE_SET_RANDOM_ADDRES 0x4
-#define LE_SET_ADVERTISING_PARAMETERS 0x5
-#define LE_READ_ADVERTISING_CHANNEL_TX_POWER 0x6
-#define LE_SET_ADVERTISING_DATA 0x7
-#define LE_SET_SCAN_RESPONSE_DATA 0x8
-#define LE_SET_ADVERTISE_ENABLE 0x9
-#define LE_SET_SCAN_PARAMETERS 0xA
-#define LE_SET_SCAN_ENABLE 0xB
-#define LE_CREATE_CONNECTION 0xC
-#define LE_CREATE_CONNECTION_CANCEL 0xD
-#define LE_READ_WHITE_LIST_SIZE 0xE
-#define LE_CLEAR_WHITE_LIST 0xF
-#define LE_ADD_DEVICE_TO_WHITE_LIST 0x10
-#define LE_REMOVE_DEVICE_FROM_WHITE_LIST 0x11
-#define LE_CONNECTION_UPDATE 0x12
-#define LE_SET_HOST_CHANNEL_CLASSIFICATION 0x13
-#define LE_READ_CHANNEL_MAP 0x14
-#define LE_READ_REMOTE_USED_FEATURES 0x15
-#define LE_ENCRYPT 0x16
-#define LE_RAND 0x17
-#define LE_START_ENCRYPTION 0x18
-#define LE_LONG_TERM_KEY_REQUESTED_REPLY 0x19
-#define LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY 0x20
-#define LE_READ_SUPPORTED_STATES 0x21
-#define LE_RECEIVER_TEST 0x22
-#define LE_TRANSMITTER_TEST 0x23
-#define LE_TEST_END_COMMAND 0x24
-#define LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY 0x25
-#define LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY 0x26
-#define LE_SET_DATA_LENGTH 0x27
-#define LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH 0x28
-#define LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH 0x29
-#define LE_READ_LOCAL_P256_PUBLIC_KEY 0x2A
-#define LE_GENERATE_DHKEY 0x2B
-#define LE_ADD_DEVICE_TO_RESOLVING_LIST 0x2C
-#define LE_REMOVE_DEVICE_FROM_RESOLVING_LIST 0x2D
-#define LE_CLEAR_RESOLVING_LIST 0x2E
-#define LE_READ_RESOLVING_LIST_SIZE 0x2F
-#define LE_READ_PEER_RESOLVABLE_ADDRESS 0x30
-#define LE_READ_LOCAL_RESOLVABLE_ADDRESS 0x31
-#define LE_SET_ADDRESS_RESOLUTION_ENABLE 0x32
-#define LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT 0x33
-#define LE_READ_MAXIMUM_DATA_LENGTH 0x34
+#define HCI_CMD_LE_SET_EVENT_MASK 0x1
+#define HCI_CMD_LE_READ_BUFFER_SIZE 0x2
+#define HCI_CMD_LE_READ_LOCAL_SUPPORTED_FEATURES 0x3
+#define HCI_CMD_LE_SET_RANDOM_ADDRES 0x4
+#define HCI_CMD_LE_SET_ADVERTISING_PARAMETERS 0x5
+#define HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER 0x6
+#define HCI_CMD_LE_SET_ADVERTISING_DATA 0x7
+#define HCI_CMD_LE_SET_SCAN_RESPONSE_DATA 0x8
+#define HCI_CMD_LE_SET_ADVERTISE_ENABLE 0x9
+#define HCI_CMD_LE_SET_SCAN_PARAMETERS 0xA
+#define HCI_CMD_LE_SET_SCAN_ENABLE 0xB
+#define HCI_CMD_LE_CREATE_CONNECTION 0xC
+#define HCI_CMD_LE_CREATE_CONNECTION_CANCEL 0xD
+#define HCI_CMD_LE_READ_WHITE_LIST_SIZE 0xE
+#define HCI_CMD_LE_CLEAR_WHITE_LIST 0xF
+#define HCI_CMD_LE_ADD_DEVICE_TO_WHITE_LIST 0x10
+#define HCI_CMD_LE_REMOVE_DEVICE_FROM_WHITE_LIST 0x11
+#define HCI_CMD_LE_CONNECTION_UPDATE 0x12
+#define HCI_CMD_LE_SET_HOST_CHANNEL_CLASSIFICATION 0x13
+#define HCI_CMD_LE_READ_CHANNEL_MAP 0x14
+#define HCI_CMD_LE_READ_REMOTE_USED_FEATURES 0x15
+#define HCI_CMD_LE_ENCRYPT 0x16
+#define HCI_CMD_LE_RAND 0x17
+#define HCI_CMD_LE_START_ENCRYPTION 0x18
+#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_REPLY 0x19
+#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY 0x20
+#define HCI_CMD_LE_READ_SUPPORTED_STATES 0x21
+#define HCI_CMD_LE_RECEIVER_TEST 0x22
+#define HCI_CMD_LE_TRANSMITTER_TEST 0x23
+#define HCI_CMD_LE_TEST_END_COMMAND 0x24
+#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY 0x25
+#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY 0x26
+#define HCI_CMD_LE_SET_DATA_LENGTH 0x27
+#define HCI_CMD_LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH 0x28
+#define HCI_CMD_LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH 0x29
+#define HCI_CMD_LE_READ_LOCAL_P256_PUBLIC_KEY 0x2A
+#define HCI_CMD_LE_GENERATE_DHKEY 0x2B
+#define HCI_CMD_LE_ADD_DEVICE_TO_RESOLVING_LIST 0x2C
+#define HCI_CMD_LE_REMOVE_DEVICE_FROM_RESOLVING_LIST 0x2D
+#define HCI_CMD_LE_CLEAR_RESOLVING_LIST 0x2E
+#define HCI_CMD_LE_READ_RESOLVING_LIST_SIZE 0x2F
+#define HCI_CMD_LE_READ_PEER_RESOLVABLE_ADDRESS 0x30
+#define HCI_CMD_LE_READ_LOCAL_RESOLVABLE_ADDRESS 0x31
+#define HCI_CMD_LE_SET_ADDRESS_RESOLUTION_ENABLE 0x32
+#define HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT 0x33
+#define HCI_CMD_LE_READ_MAXIMUM_DATA_LENGTH 0x34
+
+#define HCI_CMD_READ_AUTHENTICATED_PAYLOAD_TIMEOUT 0x123
+#define HCI_CMD_WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT 0x124
+#define HCI_CMD_READ_LOCAL_VERSION_INFORMATION 0x001
+#define HCI_CMD_READ_LOCAL_SUPPORTED_COMMANDS	0x002
+#define HCI_CMD_READ_LOCAL_SUPPORTED_FEATURES	0x003
+#define HCI_CMD_READ_BD_ADDR 0x009
+#define HCI_CMD_READ_RSSI 0x005
+
+char *cmd_descriptions_group_4[] = {
+"READ_AUTHENTICATED_PAYLOAD_TIMEOUT",
+"WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT",
+"READ_LOCAL_VERSION_INFORMATION",
+"READ_LOCAL_SUPPORTED_COMMANDS",
+"READ_LOCAL_SUPPORTED_FEATURES",
+"READ_BD_ADDR ",
+"READ_RSSI ",0};
+
+
+
 
 const char *cmd_descriptions_group_1[] = {
 "INQUIRY",
@@ -532,63 +553,78 @@ typedef struct hci_pkt_event{
 
 
 **/
+
+int readseek_btpacket_record(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_origlength(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_inclength(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_flags(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_drops(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_timestamp(FILE *,btsnoop_packet_record_t *);
+int readseek_btpacket_data(FILE *,btsnoop_packet_record_t *);
+int readseek_btsnoop_version(FILE *,btsnoop_header_t *);
+int readseek_btsnoop_magic(FILE *,btsnoop_header_t *);
+int readseek_btsnoop_datalink_type(FILE *,btsnoop_header_t *);
+
+
 void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 
 	unsigned int _index = 0;
 	size_t descr_size;
 
-	hci_pkt_event_t *_event_pkt = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
-	_event_pkt->event_code = (uint16_t) record->data[1] & 0xFFFF;
-	_event_pkt->param_len = record->data[2] & 0xFFFF;
+	//hci_pkt_event_t *_event_pkt = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
+	//_event_pkt->event_code = (uint16_t) record->data[1] & 0xFFFF;
+	//_event_pkt->param_len = record->data[2] & 0xFFFF;
 
-	pkt->event = _event_pkt;
+	pkt->event = (hci_pkt_event_t *) malloc(sizeof(hci_pkt_event_t));
+	pkt->event->event_code = (uint16_t) record->data[1] & 0xFFFF;
+	pkt->event->param_len = record->data[2] & 0xFFFF;
 
-	char *descr_p = NULL;
 	pkt->descr = (char *)malloc(sizeof(char)*MAX_PKT_DESCR_LEN);
 
-	switch(_event_pkt->event_code){
-		case HCI_EVENT_INQUIRY_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_INQUIRY_COMPLETE-1];break;
-		case HCI_EVENT_INQUIRY_RESULT: pkt->descr = event_descriptions[HCI_EVENT_INQUIRY_RESULT-1];break;
-		case HCI_EVENT_CONNECTION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_COMPLETE-1];break;
-		case HCI_EVENT_CONNECTION_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_REQUEST-1];break;
-		case HCI_EVENT_DISCONNECTION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_DISCONNECTION_COMPLETE-1];break;
-		case HCI_EVENT_AUTHENTICATION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_AUTHENTICATION_COMPLETE-1];break;
-		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE-1];break;
-		case HCI_EVENT_ENCRYPTION_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_ENCRYPTION_CHANGE-1];break;
-		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_CHANGE_COMPLETE-1];break;
-		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE : pkt->descr = event_descriptions[HCI_EVENT_MASTER_LINK_KEY_COMPLETE-1];break;
-		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE-1];break;
-		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_READ_REMOTE_VERSION_COMPLETE-1];break;
-		case HCI_EVENT_QOS_SETUP_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_QOS_SETUP_COMPLETE-1];break;
-		case HCI_EVENT_COMMAND_COMPLETE: pkt->descr = event_descriptions[HCI_EVENT_COMMAND_COMPLETE-1];break;
-		case HCI_EVENT_COMMAND_STATUS: pkt->descr = event_descriptions[HCI_EVENT_COMMAND_STATUS-1];break;
-		case HCI_EVENT_HARDWARE_ERROR: pkt->descr = event_descriptions[HCI_EVENT_HARDWARE_ERROR-1];break;
-		case HCI_EVENT_FLUSH_OCCURED: pkt->descr = event_descriptions[HCI_EVENT_FLUSH_OCCURED-1];break;
-		case HCI_EVENT_ROLE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_ROLE_CHANGE-1];break;
-		case HCI_EVENT_NUMBER_OF_PACKETS: pkt->descr = event_descriptions[HCI_EVENT_NUMBER_OF_PACKETS-1];break;
-		case HCI_EVENT_MODE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_MODE_CHANGE-1];break;
-		case HCI_EVENT_RETURN_LINK_KEYS: pkt->descr = event_descriptions[HCI_EVENT_RETURN_LINK_KEYS-1];break;
-		case HCI_EVENT_PIN_CODE_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_PIN_CODE_REQUEST-1];break;
-		case HCI_EVENT_LINK_KEY_REQUEST: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_REQUEST-1];break;
-		case HCI_EVENT_LINK_KEY_NOTIFICATION: pkt->descr = event_descriptions[HCI_EVENT_LINK_KEY_NOTIFICATION-1];break;
-		case HCI_EVENT_LOOPBACK_COMMAND: pkt->descr = event_descriptions[HCI_EVENT_LOOPBACK_COMMAND-1];break;
-		case HCI_EVENT_DATA_BUFFER_OVERFLOW: pkt->descr = event_descriptions[HCI_EVENT_DATA_BUFFER_OVERFLOW-1];break;
-		case HCI_EVENT_MAX_SLOTS_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_MAX_SLOTS_CHANGE-1];break;
-		case HCI_EVENT_READ_CLOCK_OFFSET: pkt->descr = event_descriptions[HCI_EVENT_READ_CLOCK_OFFSET-1];break;
-		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE-1];break;
-		case HCI_EVENT_QOS_VIOLATION: pkt->descr = event_descriptions[HCI_EVENT_QOS_VIOLATION-1];break;
-		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_PAGE_SCAN_MODE_CHANGE-1];break;
-		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE: pkt->descr = event_descriptions[HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE-1];break;
+	switch(pkt->event->event_code){
+		case HCI_EVENT_INQUIRY_COMPLETE: pkt->descr = event_descriptions[0];break;
+		case HCI_EVENT_INQUIRY_RESULT: pkt->descr = event_descriptions[1];break;
+		case HCI_EVENT_CONNECTION_COMPLETE: pkt->descr = event_descriptions[2];break;
+		case HCI_EVENT_CONNECTION_REQUEST: pkt->descr = event_descriptions[3];break;
+		case HCI_EVENT_DISCONNECTION_COMPLETE: pkt->descr = event_descriptions[4];break;
+		case HCI_EVENT_AUTHENTICATION_COMPLETE: pkt->descr = event_descriptions[5];break;
+		case HCI_EVENT_REMOTE_NAME_REQUEST_COMPLETE: pkt->descr = event_descriptions[6];break;
+		case HCI_EVENT_ENCRYPTION_CHANGE: pkt->descr = event_descriptions[7];break;
+		case HCI_EVENT_LINK_KEY_CHANGE_COMPLETE: pkt->descr = event_descriptions[8];break;
+		case HCI_EVENT_MASTER_LINK_KEY_COMPLETE : pkt->descr = event_descriptions[9];break;
+		case HCI_EVENT_READ_REMOTE_SUPPORTED_FEATURES_COMPLETE: pkt->descr = event_descriptions[10];break;
+		case HCI_EVENT_READ_REMOTE_VERSION_COMPLETE: pkt->descr = event_descriptions[11];break;
+		case HCI_EVENT_QOS_SETUP_COMPLETE: pkt->descr = event_descriptions[12];break;
+		case HCI_EVENT_COMMAND_COMPLETE: pkt->descr = event_descriptions[13];break;
+		case HCI_EVENT_COMMAND_STATUS: pkt->descr = event_descriptions[14];break;
+		case HCI_EVENT_HARDWARE_ERROR: pkt->descr = event_descriptions[15];break;
+		case HCI_EVENT_FLUSH_OCCURED: pkt->descr = event_descriptions[16];break;
+		case HCI_EVENT_ROLE_CHANGE: pkt->descr = event_descriptions[17];break;
+		case HCI_EVENT_NUMBER_OF_PACKETS: pkt->descr = event_descriptions[18];break;
+		case HCI_EVENT_MODE_CHANGE: pkt->descr = event_descriptions[19];break;
+		case HCI_EVENT_RETURN_LINK_KEYS: pkt->descr = event_descriptions[20];break;
+		case HCI_EVENT_PIN_CODE_REQUEST: pkt->descr = event_descriptions[21];break;
+		case HCI_EVENT_LINK_KEY_REQUEST: pkt->descr = event_descriptions[22];break;
+		case HCI_EVENT_LINK_KEY_NOTIFICATION: pkt->descr = event_descriptions[23];break;
+		case HCI_EVENT_LOOPBACK_COMMAND: pkt->descr = event_descriptions[24];break;
+		case HCI_EVENT_DATA_BUFFER_OVERFLOW: pkt->descr = event_descriptions[25];break;
+		case HCI_EVENT_MAX_SLOTS_CHANGE: pkt->descr = event_descriptions[26];break;
+		case HCI_EVENT_READ_CLOCK_OFFSET: pkt->descr = event_descriptions[27];break;
+		case HCI_EVENT_CONNECTION_PACKET_TYPE_CHANGE: pkt->descr = event_descriptions[28];break;
+		case HCI_EVENT_QOS_VIOLATION: pkt->descr = event_descriptions[29];break;
+		case HCI_EVENT_PAGE_SCAN_MODE_CHANGE: pkt->descr = event_descriptions[30];break;
+		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE: pkt->descr = event_descriptions[31];break;
 		default:break;	
 	}
 
-	printf("\t\tHCI EVENT[%s] {\n",pkt->descr);				
-	printf("\t\t* event code -> '0x%.4x'\n",
-		_event_pkt->event_code);
-	printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-		_event_pkt->param_len,
-		_event_pkt->param_len);
-	printf("\t\t}\n");
+	//print_hci_packet(pkt);
+	//printf("\t\tHCI EVENT[%s] {\n",pkt->descr);				
+	//printf("\t\t* event code -> '0x%.2x'\n",
+	//	pkt->event->event_code);
+	//printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
+	//	pkt->event->param_len,
+	//	pkt->event->param_len);
+	//printf("\t\t}\n");
 
 	return;
 }
@@ -600,30 +636,19 @@ void parse_hci_cmd_params(hci_pkt_t* pkt,btsnoop_packet_record_t* record){
 void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	unsigned int _index = 0;
 
-	hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t *) malloc(sizeof(hci_pkt_cmd_t));
-	pkt->cmd = &_cmd_pkt;
-
-	char *descr_p = NULL;
-	size_t descr_size;
+	pkt->cmd = (hci_pkt_cmd_t *) malloc(sizeof(hci_pkt_cmd_t));
 	pkt->descr = (char *)malloc(sizeof(char)*MAX_PKT_DESCR_LEN);
 
-	_cmd_pkt->opcode = ((uint16_t ) (record->data[2] << 8) | record->data[1])  & 0xFFFF ;
-	_cmd_pkt->param_len = (uint16_t) record->data[3] & 0xFFFF;	
-	_cmd_pkt->params = (uint8_t *) malloc(sizeof(uint8_t)*_cmd_pkt->param_len);
-
-
-	
-	//if (_cmd_pkt->opcode != 0x03){ return; }
-
-	//for (;_index < _cmd_pkt->param_len ;_index++){
-	//		_cmd_pkt->params[_index] = record->data[3+_index];
-	//}
+	pkt->cmd->opcode = ((uint16_t ) (record->data[2] << 8) | record->data[1])  & 0xFFFF ;
+	pkt->cmd->param_len = (uint16_t) record->data[3] & 0xFFFF;	
+	pkt->cmd->params = (uint8_t *) malloc(sizeof(uint8_t)*pkt->cmd->param_len);
 
 	//https://lisha.ufsc.br/teaching/shi/ine5346-2003-1/work/bluetooth/hci_commands.html	
 
-	switch(OGF(_cmd_pkt->opcode)){
+	switch(OGF(pkt->cmd->opcode)){
 		case 0x01:
-			switch(OCF(_cmd_pkt->opcode)){
+			//switch(OCF(_cmd_pkt->opcode)){
+			switch(OCF(pkt->cmd->opcode)){
 				case HCI_CMD_INQUIRY:                         pkt->descr = cmd_descriptions_group_1[0];break;
 				case HCI_CMD_INQUIRY_CANCEL:                  pkt->descr = cmd_descriptions_group_1[1];break;
 				case HCI_CMD_PERIODIC_INQUIRY_MODE:           pkt->descr = cmd_descriptions_group_1[2];break;
@@ -646,11 +671,12 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 				case HCI_CMD_READ_REMOTE_SUPPORTED_FEATURES:  pkt->descr = cmd_descriptions_group_1[19];break;
 				case HCI_CMD_READ_REMOTE_VERSION_INFORMATION: pkt->descr = cmd_descriptions_group_1[20];break;
 				case HCI_CMD_READ_CLOCK_OFFSET:               pkt->descr = cmd_descriptions_group_1[21];break;
-				default: break;
+				default: pkt->descr = "UKNOWN COMMAND";break;
 			}break;
 
 			case 0x02:
-				switch(OCF(_cmd_pkt->opcode)){
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
 					case HCI_CMD_HOLD_MODE:                  pkt->descr =  cmd_descriptions_group_2[0];break;
  					case HCI_CMD_SNIFF_MODE:                 pkt->descr =  cmd_descriptions_group_2[1];break;
  					case HCI_CMD_EXIT_SNIFF_MODE:            pkt->descr =  cmd_descriptions_group_2[2];break;
@@ -661,11 +687,12 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
  					case HCI_CMD_SWITCH_ROLE:                pkt->descr =  cmd_descriptions_group_2[7];break;
  					case HCI_CMD_READ_LINK_POLICY_SETTINGS:  pkt->descr =  cmd_descriptions_group_2[8];break;
  					case HCI_CMD_WRITE_LINK_POLICY_SETTINGS: pkt->descr =  cmd_descriptions_group_2[9];break;
- 					default: break;
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 
 			case 0x03:
-				switch(OCF(_cmd_pkt->opcode)){
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
 					case HCI_CMD_SET_EVENT_MASK: pkt->descr =  cmd_descriptions_group_3[0];break;
 					case HCI_CMD_RESET: pkt->descr =  cmd_descriptions_group_3[1];break;
 					case HCI_CMD_SET_EVENT_FILTER: pkt->descr =  cmd_descriptions_group_3[2];break;
@@ -717,93 +744,103 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 					case HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE:pkt->descr =  cmd_descriptions_group_3[48];break;
 					case HCI_CMD_READ_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[49];break;
 					case HCI_CMD_WRITE_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[50];break;
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x04:
-				switch(OCF(_cmd_pkt->opcode)){
-					case READ_AUTHENTICATED_PAYLOAD_TIMEOUT: pkt->descr = cmd_descriptions_group_4[0];break;
-					case WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT:pkt->descr = cmd_descriptions_group_4[1];break;
-					case READ_LOCAL_VERSION_INFORMATION:pkt->descr = cmd_descriptions_group_4[2];break;
-					case READ_LOCAL_SUPPORTED_COMMANDS:pkt->descr = cmd_descriptions_group_4[3];break;
-					case READ_LOCAL_SUPPORTED_FEATURES:pkt->descr = cmd_descriptions_group_4[4];break;
-					case READ_BD_ADDR:pkt->descr = cmd_descriptions_group_4[5];break;
-					case READ_RSSI:pkt->descr = cmd_descriptions_group_4[6];break;
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
+					case HCI_CMD_READ_AUTHENTICATED_PAYLOAD_TIMEOUT: pkt->descr = cmd_descriptions_group_4[0];break;
+					case HCI_CMD_WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT:pkt->descr = cmd_descriptions_group_4[1];break;
+					case HCI_CMD_READ_LOCAL_VERSION_INFORMATION:pkt->descr = cmd_descriptions_group_4[2];break;
+					case HCI_CMD_READ_LOCAL_SUPPORTED_COMMANDS:pkt->descr = cmd_descriptions_group_4[3];break;
+					case HCI_CMD_READ_LOCAL_SUPPORTED_FEATURES:pkt->descr = cmd_descriptions_group_4[4];break;
+					case HCI_CMD_READ_BD_ADDR:pkt->descr = cmd_descriptions_group_4[5];break;
+					case HCI_CMD_READ_RSSI:pkt->descr = cmd_descriptions_group_4[6];break;
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x05:
-				switch(OCF(_cmd_pkt->opcode)){
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x06:
-				switch(OCF(_cmd_pkt->opcode)){
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x07:
-				switch(OCF(_cmd_pkt->opcode)){
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
+					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x08:
-				switch(OCF(_cmd_pkt->opcode)){
-					case LE_SET_EVENT_MASK : pkt->descr = cmd_descriptions_group_8[0x1];break;
-					case LE_READ_BUFFER_SIZE : pkt->descr = cmd_descriptions_group_8[0x2];break;
-					case LE_READ_LOCAL_SUPPORTED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x3];break;
-					case LE_SET_RANDOM_ADDRES : pkt->descr = cmd_descriptions_group_8[0x4];break;
-					case LE_SET_ADVERTISING_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x5];break;
-					case LE_READ_ADVERTISING_CHANNEL_TX_POWER : pkt->descr = cmd_descriptions_group_8[0x6];break;
-					case LE_SET_ADVERTISING_DATA : pkt->descr = cmd_descriptions_group_8[0x7];break;
-					case LE_SET_SCAN_RESPONSE_DATA : pkt->descr = cmd_descriptions_group_8[0x8];break;
-					case LE_SET_ADVERTISE_ENABLE : pkt->descr = cmd_descriptions_group_8[0x9];break;
-					case LE_SET_SCAN_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0xA];break;
-					case LE_SET_SCAN_ENABLE : pkt->descr = cmd_descriptions_group_8[0xB];break;
-					case LE_CREATE_CONNECTION : pkt->descr = cmd_descriptions_group_8[0xC];break;
-					case LE_CREATE_CONNECTION_CANCEL : pkt->descr = cmd_descriptions_group_8[0xD];break;
-					case LE_READ_WHITE_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0xE];break;
-					case LE_CLEAR_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xF];break;
-					case LE_ADD_DEVICE_TO_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xA];break;
-					case LE_REMOVE_DEVICE_FROM_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0x10];break;
-					case LE_CONNECTION_UPDATE : pkt->descr = cmd_descriptions_group_8[0x11];break;
-					case LE_SET_HOST_CHANNEL_CLASSIFICATION : pkt->descr = cmd_descriptions_group_8[0x12];break;
-					case LE_READ_CHANNEL_MAP : pkt->descr = cmd_descriptions_group_8[0x13];break;
-					case LE_READ_REMOTE_USED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x14];break;
-					case LE_ENCRYPT : pkt->descr = cmd_descriptions_group_8[0x15];break;
-					case LE_RAND : pkt->descr = cmd_descriptions_group_8[0x16];break;
-					case LE_START_ENCRYPTION : pkt->descr = cmd_descriptions_group_8[0x17];break;
-					case LE_LONG_TERM_KEY_REQUESTED_REPLY : pkt->descr = cmd_descriptions_group_8[0x18];break;
-					case LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x19];break;
-					case LE_READ_SUPPORTED_STATES : pkt->descr = cmd_descriptions_group_8[0x1A];break;
-					case LE_RECEIVER_TEST : pkt->descr = cmd_descriptions_group_8[0x1B];break;
-					case LE_TRANSMITTER_TEST : pkt->descr = cmd_descriptions_group_8[0x1C];break;
-					case LE_TEST_END_COMMAND : pkt->descr = cmd_descriptions_group_8[0x1D];break;
-					case LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY : pkt->descr = cmd_descriptions_group_8[0x1E];break;
-					case LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x1F];break;
-					case LE_SET_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x20];break;
-					case LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x21];break;
-					case LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x22];break;
-					case LE_READ_LOCAL_P256_PUBLIC_KEY : pkt->descr = cmd_descriptions_group_8[0x23];break;
-					case LE_GENERATE_DHKEY : pkt->descr = cmd_descriptions_group_8[0x24];break;
-					case LE_ADD_DEVICE_TO_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x25];break;
-					case LE_REMOVE_DEVICE_FROM_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x26];break;
-					case LE_CLEAR_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x27];break;
-					case LE_READ_RESOLVING_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0x28];break;
-					case LE_READ_PEER_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x29];break;
-					case LE_READ_LOCAL_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x2A];break;
-					case LE_SET_ADDRESS_RESOLUTION_ENABLE : pkt->descr = cmd_descriptions_group_8[0x30];break;
-					case LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT : pkt->descr = cmd_descriptions_group_8[0x31];break;
-					case LE_READ_MAXIMUM_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x32];break;
+				//switch(OCF(_cmd_pkt->opcode)){
+				switch(OCF(pkt->cmd->opcode)){
+					case HCI_CMD_LE_SET_EVENT_MASK : pkt->descr = cmd_descriptions_group_8[0x0];break;
+					case HCI_CMD_LE_READ_BUFFER_SIZE : pkt->descr = cmd_descriptions_group_8[0x1];break;
+					case HCI_CMD_LE_READ_LOCAL_SUPPORTED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x2];break;
+					case HCI_CMD_LE_SET_RANDOM_ADDRES : pkt->descr = cmd_descriptions_group_8[0x3];break;
+					case HCI_CMD_LE_SET_ADVERTISING_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x4];break;
+					case HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER : pkt->descr = cmd_descriptions_group_8[0x5];break;
+					case HCI_CMD_LE_SET_ADVERTISING_DATA : pkt->descr = cmd_descriptions_group_8[0x6];break;
+					case HCI_CMD_LE_SET_SCAN_RESPONSE_DATA : pkt->descr = cmd_descriptions_group_8[0x7];break;
+					case HCI_CMD_LE_SET_ADVERTISE_ENABLE : pkt->descr = cmd_descriptions_group_8[0x8];break;
+					case HCI_CMD_LE_SET_SCAN_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x9];break;
+					case HCI_CMD_LE_SET_SCAN_ENABLE : pkt->descr = cmd_descriptions_group_8[0xA];break;
+					case HCI_CMD_LE_CREATE_CONNECTION : pkt->descr = cmd_descriptions_group_8[0xB];break;
+					case HCI_CMD_LE_CREATE_CONNECTION_CANCEL : pkt->descr = cmd_descriptions_group_8[0xC];break;
+					case HCI_CMD_LE_READ_WHITE_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0xD];break;
+					case HCI_CMD_LE_CLEAR_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xE];break;
+					case HCI_CMD_LE_ADD_DEVICE_TO_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xF];break;
+					case HCI_CMD_LE_REMOVE_DEVICE_FROM_WHITE_LIST : pkt->descr = cmd_descriptions_group_8[0xA];break;
+					case HCI_CMD_LE_CONNECTION_UPDATE : pkt->descr = cmd_descriptions_group_8[0x10];break;
+					case HCI_CMD_LE_SET_HOST_CHANNEL_CLASSIFICATION : pkt->descr = cmd_descriptions_group_8[0x11];break;
+					case HCI_CMD_LE_READ_CHANNEL_MAP : pkt->descr = cmd_descriptions_group_8[0x12];break;
+					case HCI_CMD_LE_READ_REMOTE_USED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x13];break;
+					case HCI_CMD_LE_ENCRYPT : pkt->descr = cmd_descriptions_group_8[0x14];break;
+					case HCI_CMD_LE_RAND : pkt->descr = cmd_descriptions_group_8[0x15];break;
+					case HCI_CMD_LE_START_ENCRYPTION : pkt->descr = cmd_descriptions_group_8[0x16];break;
+					case HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_REPLY : pkt->descr = cmd_descriptions_group_8[0x17];break;
+					case HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x18];break;
+					case HCI_CMD_LE_READ_SUPPORTED_STATES : pkt->descr = cmd_descriptions_group_8[0x19];break;
+					case HCI_CMD_LE_RECEIVER_TEST : pkt->descr = cmd_descriptions_group_8[0x1A];break;
+					case HCI_CMD_LE_TRANSMITTER_TEST : pkt->descr = cmd_descriptions_group_8[0x1B];break;
+					case HCI_CMD_LE_TEST_END_COMMAND : pkt->descr = cmd_descriptions_group_8[0x1C];break;
+					case HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY : pkt->descr = cmd_descriptions_group_8[0x1D];break;
+					case HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY : pkt->descr = cmd_descriptions_group_8[0x1E];break;
+					case HCI_CMD_LE_SET_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x1F];break;
+					case HCI_CMD_LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x20];break;
+					case HCI_CMD_LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x21];break;
+					case HCI_CMD_LE_READ_LOCAL_P256_PUBLIC_KEY : pkt->descr = cmd_descriptions_group_8[0x22];break;
+					case HCI_CMD_LE_GENERATE_DHKEY : pkt->descr = cmd_descriptions_group_8[0x23];break;
+					case HCI_CMD_LE_ADD_DEVICE_TO_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x24];break;
+					case HCI_CMD_LE_REMOVE_DEVICE_FROM_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x25];break;
+					case HCI_CMD_LE_CLEAR_RESOLVING_LIST : pkt->descr = cmd_descriptions_group_8[0x26];break;
+					case HCI_CMD_LE_READ_RESOLVING_LIST_SIZE : pkt->descr = cmd_descriptions_group_8[0x27];break;
+					case HCI_CMD_LE_READ_PEER_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x28];break;
+					case HCI_CMD_LE_READ_LOCAL_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x29];break;
+					case HCI_CMD_LE_SET_ADDRESS_RESOLUTION_ENABLE : pkt->descr = cmd_descriptions_group_8[0x2A];break;
+					case HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT : pkt->descr = cmd_descriptions_group_8[0x30];break;
+					case HCI_CMD_LE_READ_MAXIMUM_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x31];break;
+					default: pkt->descr = "UKNOWN COMMAND";break;
 
 				};break;
-			default: ;break;
+			default: pkt->descr = "UKNOWN COMMAND" ;break;
 	}	
-
-	printf("\t\tHCI CMD: [%s] {\n",
-				pkt->descr);				
-	printf("\t\t* opcode -> '0x%.4x'\n",
-		_cmd_pkt->opcode);
-	printf("\t\t* opcode group   -> '0x%.2x'\n",
-		OGF(_cmd_pkt->opcode));
-	printf("\t\t* opcode command -> '0x%.2x'\n",
-		OCF(_cmd_pkt->opcode));
-	printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-		_cmd_pkt->param_len,
-			_cmd_pkt->param_len);
-	printf("\t\t}\n");
+	//print_hci_packet(pkt);
+	//printf("\t\tHCI CMD: [%s] {\n",
+	//			pkt->descr);				
+	//printf("\t\t* opcode -> '0x%.2x'\n",
+	//	pkt->cmd->opcode);
+	//printf("\t\t* opcode group   -> '0x%.2x'\n",
+	//	OGF(pkt->cmd->opcode));
+	//printf("\t\t* opcode command -> '0x%.2x'\n",
+	//	OCF(pkt->cmd->opcode));
+	//printf("\t\t* param_len -> '0x%.2x' bytes \n",
+	//	pkt->cmd->param_len);
+	//printf("\t\t}\n");
 	
-	return;
+	return pkt;
 }
 void parse_hci_async(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	return;
@@ -843,21 +880,10 @@ void parse_hci(hci_pkt_t *pkt, btsnoop_packet_record_t* packet_record){
 					//printf(" HCI_VENDOR_CMD\n");	
 					parse_hci_event(pkt, packet_record);break;
 					parse_hci_vendorcmd(pkt, packet_record);break;
-			default: printf("[x] problem determining cmd type...\n") ;break;
+			default: printf("[x] problem determining cmd type...\n");pkt = NULL ;break;
 	}		
 	return;
 }
-
-int readseek_btpacket_record(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_origlength(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_inclength(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_flags(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_drops(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_timestamp(FILE *,btsnoop_packet_record_t *);
-int readseek_btpacket_data(FILE *,btsnoop_packet_record_t *);
-int readseek_btsnoop_version(FILE *,btsnoop_header_t *);
-int readseek_btsnoop_magic(FILE *,btsnoop_header_t *);
-int readseek_btsnoop_datalink_type(FILE *,btsnoop_header_t *);
 
 
 int readseek_btpacket_origlength(FILE *file,btsnoop_packet_record_t *bt_packet_record){
@@ -1059,33 +1085,31 @@ void print_btpacket_record_withhci(unsigned int offset,
 		//print hci data
 		hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
 		if(_cmd_pkt != NULL){ //gotta check for cmd sonner
-			hci_pkt_cmd_t *_cmd_pkt = _hci_pkt->cmd;
 
 			printf("\t\tHCI CMD: [%s] {",
 				_hci_pkt->descr);				
 
 			printf("\t\t* opcode -> '0x%.4x'\n",
-				_cmd_pkt->opcode);
+				_hci_pkt->cmd->opcode);
 
 			printf("\t\t* opcode group   -> '0x%.2x'\n",
-				OGF(_cmd_pkt->opcode));
+				OGF(_hci_pkt->cmd->opcode));
 
 			printf("\t\t* opcode command -> '0x%.2x'\n",
-				OCF(_cmd_pkt->opcode));
+				OCF(_hci_pkt->cmd->opcode));
 
 			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_cmd_pkt->param_len,
-					_cmd_pkt->param_len);
+				_hci_pkt->cmd->param_len,
+					_hci_pkt->cmd->param_len);
 
 		}else if(_hci_pkt->event){
-			hci_pkt_event_t *_event_pkt = _hci_pkt->event;
 
-			printf("\t\tHCI EVENT:%s {");				
+			printf("\t\tHCI EVENT:%s {\n");				
 			printf("\t\t* event code -> '0x%.4x'\n",
-				_event_pkt->event_code);
+				_hci_pkt->event->event_code);
 			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_event_pkt->param_len,
-				_event_pkt->param_len);
+				_hci_pkt->event->param_len,
+				_hci_pkt->event->param_len);
 
 		}else if(_hci_pkt->async){
 			printf("\t\tHCI ASYNC:%s {");				
@@ -1097,44 +1121,45 @@ void print_btpacket_record_withhci(unsigned int offset,
 void print_hci_packet(hci_pkt_t * _hci_pkt){
 
 		if (!_hci_pkt){	
+			printf("[x] got a null hci packet\n");
 			return;
 		}
 
-		hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
-		hci_pkt_async_t *_async_pkt = (hci_pkt_async_t*) _hci_pkt->async;
-		hci_pkt_event_t *_event_pkt = (hci_pkt_event_t*) _hci_pkt->event;
+		//hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
+		//hci_pkt_async_t *_async_pkt = (hci_pkt_async_t*) _hci_pkt->async;
+		//hci_pkt_event_t *_event_pkt = (hci_pkt_event_t*) _hci_pkt->event;
 
-		if(_cmd_pkt != NULL){ //gotta check for cmd sonner
-			hci_pkt_cmd_t *_cmd_pkt = _hci_pkt->cmd;
-
-			printf("\t\tHCI CMD: [%s] {",
+		if(_hci_pkt->cmd){ 
+			printf("\t\tHCI CMD: [%s] {\n",
 				_hci_pkt->descr);				
 
-			printf("\t\t* opcode -> '0x%.4x'\n",
-				_cmd_pkt->opcode);
+			printf("\t\t* opcode -> '0x%.2x'\n",
+				_hci_pkt->cmd->opcode);
 
 			printf("\t\t* opcode group   -> '0x%.2x'\n",
-				OGF(_cmd_pkt->opcode));
+				OGF(_hci_pkt->cmd->opcode));
 
 			printf("\t\t* opcode command -> '0x%.2x'\n",
-				OCF(_cmd_pkt->opcode));
+				OCF(_hci_pkt->cmd->opcode));
 
 			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_cmd_pkt->param_len,
-					_cmd_pkt->param_len);
+				_hci_pkt->cmd->param_len,
+					_hci_pkt->cmd->param_len);
 
-		}else if(_event_pkt != NULL){
-			printf("\t\tHCI EVENT:%s {");				
-			printf("\t\t* event code -> '0x%.4x'\n",
-				_event_pkt->event_code);
+		}else if(_hci_pkt->event){
+			printf("\t\tHCI EVENT: [%s] {\n",_hci_pkt->descr);				
+			printf("\t\t* event code -> '0x%.2x'\n",
+				_hci_pkt->event->event_code);
 			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_event_pkt->param_len,
-				_event_pkt->param_len);
+				_hci_pkt->event->param_len,
+				_hci_pkt->event->param_len);
 
 		}else if(_hci_pkt->async){
-			printf("\t\tHCI ASYNC:%s {");				
+			printf("\t\tHCI ASYNC EVENT: [%s] {");				
 
 		}
+		
+		printf("\n\n\t\t}\n");
 
 }
 
@@ -1145,9 +1170,9 @@ void print_btpacket_record(unsigned int offset, btsnoop_packet_record_t * _bt_pa
 		char timestamp_buf[80]; 
 		struct tm ts;
 		unsigned int data_index = 0;
-		//if (!_bt_packet){	
-		//	return;
-		//}
+		if (!_bt_packet){	
+			return;
+		}
 
 		printf("\t(%d)[0x%.2x] btsnoop_packet_record_t {\n",offset,offset);
 		printf("\t* orignal length => %d\n",_bt_packet->orig_length);
@@ -1282,12 +1307,13 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 	char *cur_data;
 	unsigned int data_index;
 	btsnoop_packet_record_t *_bt_packet;
-	hci_pkt_t *_hci_pkt = NULL;
+	hci_pkt_t *_hci_pkt;
 	fseek(file,BT_FILE_HEADER_SZ,SEEK_SET); //reset pointer
 
 	while (bytes_read != -1){
 		//read the data field
 		_bt_packet = (btsnoop_packet_record_t *) malloc(sizeof(btsnoop_packet_record_t));
+		//_hci_pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
 		if (!_bt_packet){
 			return NULL;
 		}
@@ -1295,32 +1321,33 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 		bytes_read = readseek_btpacket_record(file,_bt_packet);
 		if (_bt_packet && _bt_packet->incl_length){
 			index += 1;
-			//unsigned int tell = ftell(file);		
-			//print_btpacket_record(tell,_bt_packet);	 //this works, so now I need to build my linked list of bt packets
-			//bt_packet_list[index++] = _bt_packet;					
 			_bt_cur_list->record = _bt_packet;
 
 			parse_hci(_hci_pkt,_bt_packet);
-			//print_hci_packet(_hci_cur_list->packet);
-
 			//_hci_cur_list->packet = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
-			//memcpy(_hci_cur_list->packet, _hci_pkt, sizeof(hci_pkt_t));
+			_hci_cur_list->packet = _hci_pkt;
 
 			_hci_cur_list->prev = _hci_prev_list; 
 			_bt_cur_list->prev = _bt_prev_list;	
 
+			//get previous nodes
 			btsnoop_packet_list_t *__bt_cur_prev = _bt_cur_list->prev;
 			hci_packet_list_t *__hci_cur_prev = _hci_cur_list->prev;
 
-			__bt_cur_prev->next = _bt_cur_list;
-			__hci_cur_prev->next = _hci_cur_list;				
-				
-			_bt_prev_list = _bt_cur_list;
-			_hci_prev_list = _hci_cur_list;
+			if (index != 0){
+				//assign next pointers
+				__bt_cur_prev->next = _bt_cur_list;
+				__hci_cur_prev->next = _hci_cur_list;				
+				//assign back pointers	
+				_bt_prev_list = _bt_cur_list;
+				_hci_prev_list = _hci_cur_list;
+
+			}	
 
 			_bt_cur_list->next = (btsnoop_packet_list_t *) malloc(sizeof(btsnoop_packet_list_t));
 			_hci_prev_list->next = (hci_packet_list_t *) malloc(sizeof(hci_packet_list_t)); 
 
+			//move up list
 			_bt_cur_list = _bt_cur_list->next;
 			_hci_cur_list = _hci_cur_list->next;
 
@@ -1449,27 +1476,23 @@ int main(int argc, char **argv){
 	btsnoop_header_t *bt_header = NULL;
 	bt_header = open_hci_log(argv[1]);
 	print_bt_header(bt_header);
-	btsnoop_packet_list_t *_packet_list = get_bt_packets(argv[1]); //implement an btsnoop_hci_pkt_list_t so we can search through parsed packets
-	if (_packet_list == NULL){
-		printf("[x] problem reading packets\n");
-	}
+
+
+
+
+	btsnoop_packet_list_t *_packet_list = get_bt_packets(argv[1]); 
 	hci_packet_list_t* _hci_packet_list = (hci_packet_list_t *) _packet_list->_hci_packet_list;
 	unsigned int index = 0;
-	printf("[*] printing records...\n");
 	while (_packet_list != NULL){
 
-			btsnoop_packet_record_t *_packet_record = (btsnoop_packet_record_t *)_packet_list->record;	
-			hci_pkt_t * _hci_packet_ = (hci_pkt_t*) _hci_packet_list->packet;
-			print_hci_packet(_hci_packet_);
-			//print_btpacket_record_withhci(0,_packet_record,_hci_packet_);
-			if (_hci_packet_ != NULL){
-				printf("[*] found valid hci packet\n");
-			}
-			//if (_packet_record != NULL){
-			//	print_btpacket_record_withhci(0,_packet_record,_hci_packet_); 
-			//	//print_btpacket_record(0,_packet_record); 
-			//}
+			btsnoop_packet_record_t *_packet_record = (btsnoop_packet_record_t *) _packet_list->record;	
+			hci_pkt_t * _hci_packet_ = _hci_packet_list->packet;
 
+			//if (_hci_packet_ != NULL){
+			//	print_hci_packet(_hci_packet_);
+			//}
+			
+			print_btpacket_record(index,_packet_record);
 			_packet_list = _packet_list->next;
 			_hci_packet_list = _hci_packet_list->next;
 
@@ -1477,22 +1500,5 @@ int main(int argc, char **argv){
 	}
 	return 0;
 }
-
-#define READ_AUTHENTICATED_PAYLOAD_TIMEOUT 0x123
-#define WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT 0x124
-#define READ_LOCAL_VERSION_INFORMATION 0x001
-#define READ_LOCAL_SUPPORTED_COMMANDS	0x002
-#define READ_LOCAL_SUPPORTED_FEATURES	0x003
-#define READ_BD_ADDR 0x009
-#define READ_RSSI 0x005
-
-char *cmd_descriptions_group_4[] = {
-"READ_AUTHENTICATED_PAYLOAD_TIMEOUT",
-"WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT",
-"READ_LOCAL_VERSION_INFORMATION",
-"READ_LOCAL_SUPPORTED_COMMANDS",
-"READ_LOCAL_SUPPORTED_FEATURES",
-"READ_BD_ADDR ",
-"READ_RSSI ",0};
 
 
