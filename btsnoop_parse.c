@@ -854,7 +854,7 @@ void parse_hci(hci_pkt_t *pkt, btsnoop_packet_record_t* packet_record){
 	//printf("[hci] parsing hci packet @ (%p)\n", &packet_record);
 
 	uint8_t pkt_type = 0;
-	pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
+	//pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
 
 	//if (!packet_record){ return ;}
 	pkt_type = (uint8_t) packet_record->data[0];
@@ -1040,13 +1040,6 @@ void print_btpacket_record_withhci(unsigned int offset,
 		char timestamp_buf[80]; 
 		struct tm ts;
 		unsigned int data_index = 0;
-		//if (_bt_packet == NULL ||  _hci_pkt == NULL){	
-		//	printf("[x] problem printing btpacket with hci (%d)\n",sizeof(_hci_pkt));
-		//	return;
-		//}
-		//if(!(_bt_packet != NULL &&  _hci_pkt != NULL)){
-		//	return;
-		//}
 
 		printf("\t(%d)[0x%.2x] btsnoop_packet_record_t {\n",offset,offset);
 		printf("\t* orignal length => %d\n",_bt_packet->orig_length);
@@ -1081,41 +1074,8 @@ void print_btpacket_record_withhci(unsigned int offset,
 				}
 				line_index++;
 		}	
-		
-		//print hci data
-		hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
-		if(_cmd_pkt != NULL){ //gotta check for cmd sonner
-
-			printf("\t\tHCI CMD: [%s] {",
-				_hci_pkt->descr);				
-
-			printf("\t\t* opcode -> '0x%.4x'\n",
-				_hci_pkt->cmd->opcode);
-
-			printf("\t\t* opcode group   -> '0x%.2x'\n",
-				OGF(_hci_pkt->cmd->opcode));
-
-			printf("\t\t* opcode command -> '0x%.2x'\n",
-				OCF(_hci_pkt->cmd->opcode));
-
-			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_hci_pkt->cmd->param_len,
-					_hci_pkt->cmd->param_len);
-
-		}else if(_hci_pkt->event){
-
-			printf("\t\tHCI EVENT:%s {\n");				
-			printf("\t\t* event code -> '0x%.4x'\n",
-				_hci_pkt->event->event_code);
-			printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-				_hci_pkt->event->param_len,
-				_hci_pkt->event->param_len);
-
-		}else if(_hci_pkt->async){
-			printf("\t\tHCI ASYNC:%s {");				
-
-		}
-		printf("\n\n\t\t}");
+		printf("\n");
+		print_hci_packet(_hci_pkt);
 		printf("\n\n\t}\n\n");
 }
 void print_hci_packet(hci_pkt_t * _hci_pkt){
@@ -1313,7 +1273,7 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 	while (bytes_read != -1){
 		//read the data field
 		_bt_packet = (btsnoop_packet_record_t *) malloc(sizeof(btsnoop_packet_record_t));
-		//_hci_pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
+		_hci_pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
 		if (!_bt_packet){
 			return NULL;
 		}
@@ -1486,13 +1446,12 @@ int main(int argc, char **argv){
 	while (_packet_list != NULL){
 
 			btsnoop_packet_record_t *_packet_record = (btsnoop_packet_record_t *) _packet_list->record;	
-			hci_pkt_t * _hci_packet_ = _hci_packet_list->packet;
-
-			//if (_hci_packet_ != NULL){
-			//	print_hci_packet(_hci_packet_);
-			//}
-			
-			print_btpacket_record(index,_packet_record);
+			hci_pkt_t * _hci_packet = _hci_packet_list->packet;
+			if (_hci_packet){
+			print_btpacket_record_withhci(index,_packet_record,_hci_packet);
+			}else{
+				print_btpacket_record(index,_packet_record);
+			}
 			_packet_list = _packet_list->next;
 			_hci_packet_list = _hci_packet_list->next;
 
