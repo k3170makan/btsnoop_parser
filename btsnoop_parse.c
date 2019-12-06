@@ -9,6 +9,8 @@
 		- printout data fields for hci_packetw
 		- printout uuids and devices found
 		-
+		- split off the files into seperate libraries etc
+		- sync hci standards with this https://chromium.googlesource.com/aosp/platform/system/bt/+/master/stack/include/hcidefs.h
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,6 +106,25 @@ http://www.fte.com/webhelp/bpa600/Content/Technical_Information/BT_Snoop_File_Fo
 #define HCI_EVENT_PAGE_SCAN_MODE_CHANGE 0x1F
 #define HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE 0x20
 
+#define HCI_EVENT_FLOW_SPECIFICATION_COMP_EVT 0x21
+#define HCI_EVENT_INQUIRY_RSSI_RESULT_EVT 0x22
+#define HCI_EVENT_READ_RMT_EXT_FEATURES_COMP_EVT 0x23
+#define HCI_EVENT_ESCO_CONNECTION_COMP_EVT 0x2C
+#define HCI_EVENT_ESCO_CONNECTION_CHANGED_EVT 0x2D
+#define HCI_EVENT_SNIFF_SUB_RATE_EVT 0x2E
+#define HCI_EVENT_EXTENDED_INQUIRY_RESULT_EVT 0x2F
+#define HCI_EVENT_ENCRYPTION_KEY_REFRESH_COMP_EVT 0x30
+#define HCI_EVENT_IO_CAPABILITY_REQUEST_EVT 0x31
+#define HCI_EVENT_IO_CAPABILITY_RESPONSE_EVT 0x32
+#define HCI_EVENT_USER_CONFIRMATION_REQUEST_EVT 0x33
+#define HCI_EVENT_USER_PASSKEY_REQUEST_EVT 0x34
+#define HCI_EVENT_REMOTE_OOB_DATA_REQUEST_EVT 0x35
+#define HCI_EVENT_SIMPLE_PAIRING_COMPLETE_EVT 0x36
+#define HCI_EVENT_LINK_SUPER_TOUT_CHANGED_EVT 0x38
+#define HCI_EVENT_ENHANCED_FLUSH_COMPLETE_EVT 0x39
+#define HCI_EVENT_USER_PASSKEY_NOTIFY_EVT 0x3B
+#define HCI_EVENT_KEYPRESS_NOTIFY_EVT 0x3C
+#define HCI_EVENT_RMT_HOST_SUP_FEAT_NOTIFY_EVT 0x3D
 const char* event_descriptions[] = {
 "INQUIRY COMPLETE",
 "INQUIRY RESULT ",
@@ -170,6 +191,134 @@ const char* event_descriptions[] = {
 #define HCI_CMD_READ_REMOTE_VERSION_INFORMATION 0x1D
 #define HCI_CMD_READ_CLOCK_OFFSET 0x1F
 
+//stolen from https://github.com/pauloborges/bluez/blob/master/lib/hci.h
+
+typedef struct { uint8_t address[4] } btaddr_t;
+
+typedef struct {
+	uint8_t lap[3];
+	uint8_t length;
+	uint8_t num_rsp;
+
+}hci_cmd_resp_inquiry;
+
+typedef struct {
+	uint8_t status;
+	btaddr_t address;
+
+}hci_cmd_resp_status_baddr;
+typedef struct {
+	uint16_t max_period;
+	uint16_t min_period;
+	uint8_t lap[3];
+	uint8_t length;
+	uint8_t num_rsp;
+
+}hci_cmd_resp_periodic_inquiry;
+
+typedef struct {
+	btaddr_t address;
+	uint16_t pkt_type;
+	uint8_t pscan_rep_mode;
+	uint8_t pscan_mode;
+	uint16_t clock_offset;
+	uint8_t role_switch;
+	
+}hci_cmd_resp_create_connection;
+
+typedef struct {
+	uint16_t handle;
+	uint8_t reason;
+
+}hci_cmd_resp_disconnect;
+
+typedef struct {
+	uint16_t handle;
+	uint16_t pkt_type;
+
+}hci_cmd_resp_add_sco;
+
+typedef struct{
+	btaddr_t address;
+
+}hci_cmd_resp_create_connection_cancel;
+
+typedef struct {
+	btaddr_t address;
+	uint8_t role;
+}hci_cmd_resp_accept_connection_request;
+
+typedef struct {
+	btaddr_t address;
+	uint8_t reason;
+}hci_cmd_resp_rejected_connection_request;
+
+typedef struct {
+	btaddr_t address;
+	uint8_t link_key[16];
+
+}hci_cmd_resp_link_key_reply;
+
+typedef struct {
+	btaddr_t address;
+	uint8_t pin_len;
+	uint8_t pin_code;
+
+}hci_cmd_resp_pin_code_reply;
+
+typedef struct{
+	uint16_t handle;
+
+}hci_cmd_resp_set_connection_ptype;
+
+typedef struct {
+	uint16_t handle;
+	uint8_t encrypt;	
+
+} hci_cmd_resp_set_connection_encrypt;
+
+
+typedef struct {
+	uint16_t handle;
+	
+} hci_cmd_resp_change_connection_link_key;
+
+typedef struct {
+	uint8_t key_flag;	
+
+} hci_cmd_resp_master_link_key;
+
+typedef struct {
+	btaddr_t address;
+	uint8_t pscan_rep_mode;
+	uint8_t pscan_mode;
+	uint16_t clock_offset;
+
+} hci_cmd_resp_remote_name_request;
+
+typedef struct {
+	uint16_t handle;	
+
+} hci_cmd_resp_remote_name_request_cancel;
+
+typedef struct {
+	uint16_t handle;
+} hci_cmd_resp_read_remote_features;
+
+typedef struct {
+	uint16_t handle;
+	uint8_t page_num;
+} hci_cmd_resp_read_remote_extended_features;
+
+typedef struct{
+	uint16_t handle;	
+} hci_cmd_read_remote_version;
+
+typedef struct {
+	uint16_t handle;
+} hci_cmd_read_clock_offset;
+
+
 /*OGF 2*/
 #define HCI_CMD_HOLD_MODE 0x001
 #define HCI_CMD_SNIFF_MODE 0x003
@@ -234,63 +383,69 @@ const char* event_descriptions[] = {
 #define HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE 0x003C
 #define HCI_CMD_READ_PAGE_SCAN_MODE 0x003D
 #define HCI_CMD_WRITE_PAGE_SCAN_MODE 0x003E
+#define HCI_CMD_WRITE_SIMPLE_PARING_MODE 0x0056
+#define HCI_CMD_WRITE_INQUIRY_MODE 0x0045
+#define HCI_CMD_WRITE_PAGE_SCAN_TYPE 0x0047
+/* OGF 4*/
+#define HCI_CMD_READ_AUTHENTICATED_PAYLOAD_TIMEOUT 0x123
+#define HCI_CMD_WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT 0x124
+#define HCI_CMD_READ_LOCAL_VERSION_INFORMATION 0x001
+#define HCI_CMD_READ_LOCAL_SUPPORTED_COMMANDS	0x002
+#define HCI_CMD_READ_LOCAL_SUPPORTED_FEATURES	0x004
+#define HCI_CMD_READ_BD_ADDR 0x009
+#define HCI_CMD_READ_RSSI 0x005
+
 
 /*OGF group 8*/
 
 #define HCI_CMD_LE_SET_EVENT_MASK 0x1
 #define HCI_CMD_LE_READ_BUFFER_SIZE 0x2
 #define HCI_CMD_LE_READ_LOCAL_SUPPORTED_FEATURES 0x3
-#define HCI_CMD_LE_SET_RANDOM_ADDRES 0x4
-#define HCI_CMD_LE_SET_ADVERTISING_PARAMETERS 0x5
-#define HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER 0x6
-#define HCI_CMD_LE_SET_ADVERTISING_DATA 0x7
-#define HCI_CMD_LE_SET_SCAN_RESPONSE_DATA 0x8
-#define HCI_CMD_LE_SET_ADVERTISE_ENABLE 0x9
-#define HCI_CMD_LE_SET_SCAN_PARAMETERS 0xA
-#define HCI_CMD_LE_SET_SCAN_ENABLE 0xB
-#define HCI_CMD_LE_CREATE_CONNECTION 0xC
-#define HCI_CMD_LE_CREATE_CONNECTION_CANCEL 0xD
-#define HCI_CMD_LE_READ_WHITE_LIST_SIZE 0xE
-#define HCI_CMD_LE_CLEAR_WHITE_LIST 0xF
-#define HCI_CMD_LE_ADD_DEVICE_TO_WHITE_LIST 0x10
-#define HCI_CMD_LE_REMOVE_DEVICE_FROM_WHITE_LIST 0x11
-#define HCI_CMD_LE_CONNECTION_UPDATE 0x12
-#define HCI_CMD_LE_SET_HOST_CHANNEL_CLASSIFICATION 0x13
-#define HCI_CMD_LE_READ_CHANNEL_MAP 0x14
-#define HCI_CMD_LE_READ_REMOTE_USED_FEATURES 0x15
-#define HCI_CMD_LE_ENCRYPT 0x16
-#define HCI_CMD_LE_RAND 0x17
-#define HCI_CMD_LE_START_ENCRYPTION 0x18
-#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_REPLY 0x19
-#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY 0x20
-#define HCI_CMD_LE_READ_SUPPORTED_STATES 0x21
-#define HCI_CMD_LE_RECEIVER_TEST 0x22
-#define HCI_CMD_LE_TRANSMITTER_TEST 0x23
-#define HCI_CMD_LE_TEST_END_COMMAND 0x24
-#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY 0x25
-#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY 0x26
-#define HCI_CMD_LE_SET_DATA_LENGTH 0x27
-#define HCI_CMD_LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH 0x28
-#define HCI_CMD_LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH 0x29
-#define HCI_CMD_LE_READ_LOCAL_P256_PUBLIC_KEY 0x2A
-#define HCI_CMD_LE_GENERATE_DHKEY 0x2B
-#define HCI_CMD_LE_ADD_DEVICE_TO_RESOLVING_LIST 0x2C
-#define HCI_CMD_LE_REMOVE_DEVICE_FROM_RESOLVING_LIST 0x2D
-#define HCI_CMD_LE_CLEAR_RESOLVING_LIST 0x2E
-#define HCI_CMD_LE_READ_RESOLVING_LIST_SIZE 0x2F
-#define HCI_CMD_LE_READ_PEER_RESOLVABLE_ADDRESS 0x30
-#define HCI_CMD_LE_READ_LOCAL_RESOLVABLE_ADDRESS 0x31
-#define HCI_CMD_LE_SET_ADDRESS_RESOLUTION_ENABLE 0x32
-#define HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT 0x33
-#define HCI_CMD_LE_READ_MAXIMUM_DATA_LENGTH 0x34
-
-#define HCI_CMD_READ_AUTHENTICATED_PAYLOAD_TIMEOUT 0x123
-#define HCI_CMD_WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT 0x124
-#define HCI_CMD_READ_LOCAL_VERSION_INFORMATION 0x001
-#define HCI_CMD_READ_LOCAL_SUPPORTED_COMMANDS	0x002
-#define HCI_CMD_READ_LOCAL_SUPPORTED_FEATURES	0x003
-#define HCI_CMD_READ_BD_ADDR 0x009
-#define HCI_CMD_READ_RSSI 0x005
+#define HCI_CMD_LE_SET_RANDOM_ADDRES 0x5
+#define HCI_CMD_LE_SET_ADVERTISING_PARAMETERS 0x6
+#define HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER 0x7
+#define HCI_CMD_LE_SET_ADVERTISING_DATA 0x8
+#define HCI_CMD_LE_SET_SCAN_RESPONSE_DATA 0x9
+#define HCI_CMD_LE_SET_ADVERTISE_ENABLE 0xA
+#define HCI_CMD_LE_SET_SCAN_PARAMETERS 0xB
+#define HCI_CMD_LE_SET_SCAN_ENABLE 0xC
+#define HCI_CMD_LE_CREATE_CONNECTION 0xD
+#define HCI_CMD_LE_CREATE_CONNECTION_CANCEL 0xE
+#define HCI_CMD_LE_READ_WHITE_LIST_SIZE 0xF
+#define HCI_CMD_LE_CLEAR_WHITE_LIST 0x10
+#define HCI_CMD_LE_ADD_DEVICE_TO_WHITE_LIST 0x11
+#define HCI_CMD_LE_REMOVE_DEVICE_FROM_WHITE_LIST 0x12
+#define HCI_CMD_LE_CONNECTION_UPDATE 0x13
+#define HCI_CMD_LE_SET_HOST_CHANNEL_CLASSIFICATION 0x14
+#define HCI_CMD_LE_READ_CHANNEL_MAP 0x15
+#define HCI_CMD_LE_READ_REMOTE_USED_FEATURES 0x16
+#define HCI_CMD_LE_ENCRYPT 0x17
+#define HCI_CMD_LE_RAND 0x18
+#define HCI_CMD_LE_START_ENCRYPTION 0x19
+#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_REPLY 0x1A
+#define HCI_CMD_LE_LONG_TERM_KEY_REQUESTED_NEGATIVE_REPLY 0x1B
+#define HCI_CMD_LE_READ_SUPPORTED_STATES 0x1C
+#define HCI_CMD_LE_RECEIVER_TEST 0x1D
+#define HCI_CMD_LE_TRANSMITTER_TEST 0x1E
+#define HCI_CMD_LE_TEST_END_COMMAND 0x1F
+#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_REPLY 0x20
+#define HCI_CMD_LE_REMOTE_CONNECTION_PARAMETER_REQUEST_NEGATIVE_REPLY 0x21
+#define HCI_CMD_LE_SET_DATA_LENGTH 0x22
+#define HCI_CMD_LE_READ_SUGGESTED_DEFAULT_DATA_LENGTH 0x23
+#define HCI_CMD_LE_WRITE_SUGGESTED_DEFAULT_DATA_LENGTH 0x24
+#define HCI_CMD_LE_READ_LOCAL_P256_PUBLIC_KEY 0x25
+#define HCI_CMD_LE_GENERATE_DHKEY 0x26
+#define HCI_CMD_LE_ADD_DEVICE_TO_RESOLVING_LIST 0x27
+#define HCI_CMD_LE_REMOVE_DEVICE_FROM_RESOLVING_LIST 0x28
+#define HCI_CMD_LE_CLEAR_RESOLVING_LIST 0x29
+#define HCI_CMD_LE_READ_RESOLVING_LIST_SIZE 0x2A
+#define HCI_CMD_LE_READ_PEER_RESOLVABLE_ADDRESS 0x2B
+#define HCI_CMD_LE_READ_LOCAL_RESOLVABLE_ADDRESS 0x2C
+#define HCI_CMD_LE_SET_ADDRESS_RESOLUTION_ENABLE 0x2D
+#define HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT 0x2E
+#define HCI_CMD_LE_READ_MAXIMUM_DATA_LENGTH 0x2F
+#define HCI_CMD_LE_HOST_SUPPORTED 0x6D
+#define HCI_CMD_WRITE_SECURE_CONNECTION_HOST_SUPPORT 0x7A
 
 char *cmd_descriptions_group_4[] = {
 "READ_AUTHENTICATED_PAYLOAD_TIMEOUT",
@@ -391,7 +546,9 @@ char *cmd_descriptions_group_3[] = {
  "READ PAGE SCAN PERIOD MODE",
  "WRITE PAGE SCAN PERIOD MODE",
  "READ PAGE SCAN MODE",
- "WRITE PAGE SCAN MODE",0};
+ "WRITE PAGE SCAN MODE",
+ "WRITE SIMPLE PARING MODE",
+ "LE HOST SUPPORTED","WRITE INQUIRY MODE","WRITE SECURE CONNECTIONS HOST SUPPORT","WRITE SIMPLE PARING MODE",0};
 
 char *cmd_descriptions_group_8[] = {
 "LE SET EVENT MASK",
@@ -460,6 +617,7 @@ typedef struct hci_pkt_cmd{
 typedef struct hci_pkt_event{
 	uint16_t event_code;
 	uint8_t param_len;
+	/*uint16_t opcode;*/
 	uint8_t *params;
 
 } hci_pkt_event_t;
@@ -616,16 +774,6 @@ void parse_hci_event(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 		case HCI_EVENT_PAGE_SCAN_REPETITION_CHANGE: pkt->descr = event_descriptions[31];break;
 		default:break;	
 	}
-
-	//print_hci_packet(pkt);
-	//printf("\t\tHCI EVENT[%s] {\n",pkt->descr);				
-	//printf("\t\t* event code -> '0x%.2x'\n",
-	//	pkt->event->event_code);
-	//printf("\t\t* param_len -> '0x%.2x' (%d) bytes \n",
-	//	pkt->event->param_len,
-	//	pkt->event->param_len);
-	//printf("\t\t}\n");
-
 	return;
 }
 
@@ -643,11 +791,9 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 	pkt->cmd->param_len = (uint16_t) record->data[3] & 0xFFFF;	
 	pkt->cmd->params = (uint8_t *) malloc(sizeof(uint8_t)*pkt->cmd->param_len);
 
-	//https://lisha.ufsc.br/teaching/shi/ine5346-2003-1/work/bluetooth/hci_commands.html	
 
 	switch(OGF(pkt->cmd->opcode)){
 		case 0x01:
-			//switch(OCF(_cmd_pkt->opcode)){
 			switch(OCF(pkt->cmd->opcode)){
 				case HCI_CMD_INQUIRY:                         pkt->descr = cmd_descriptions_group_1[0];break;
 				case HCI_CMD_INQUIRY_CANCEL:                  pkt->descr = cmd_descriptions_group_1[1];break;
@@ -675,7 +821,6 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 			}break;
 
 			case 0x02:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					case HCI_CMD_HOLD_MODE:                  pkt->descr =  cmd_descriptions_group_2[0];break;
  					case HCI_CMD_SNIFF_MODE:                 pkt->descr =  cmd_descriptions_group_2[1];break;
@@ -691,7 +836,6 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 				};break;
 
 			case 0x03:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					case HCI_CMD_SET_EVENT_MASK: pkt->descr =  cmd_descriptions_group_3[0];break;
 					case HCI_CMD_RESET: pkt->descr =  cmd_descriptions_group_3[1];break;
@@ -744,10 +888,14 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 					case HCI_CMD_WRITE_PAGE_SCAN_PERIOD_MODE:pkt->descr =  cmd_descriptions_group_3[48];break;
 					case HCI_CMD_READ_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[49];break;
 					case HCI_CMD_WRITE_PAGE_SCAN_MODE:pkt->descr =  cmd_descriptions_group_3[50];break;
+					case HCI_CMD_WRITE_SIMPLE_PARING_MODE:pkt->descr =  cmd_descriptions_group_3[51];break;
+					case HCI_CMD_LE_HOST_SUPPORTED: pkt->descr = cmd_descriptions_group_3[0x52];break;
+					case HCI_CMD_WRITE_INQUIRY_MODE: pkt->descr = cmd_descriptions_group_3[0x53];break;
+					case HCI_CMD_WRITE_SECURE_CONNECTION_HOST_SUPPORT: pkt->descr = cmd_descriptions_group_3[0x54];break;
+					case HCI_CMD_WRITE_PAGE_SCAN_TYPE: pkt->descr = cmd_descriptions_group_3[0x55];break;
 					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x04:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					case HCI_CMD_READ_AUTHENTICATED_PAYLOAD_TIMEOUT: pkt->descr = cmd_descriptions_group_4[0];break;
 					case HCI_CMD_WRITE_AUTHENTICATED_PAYLOAD_TIMEOUT:pkt->descr = cmd_descriptions_group_4[1];break;
@@ -759,32 +907,28 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x05:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x06:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x07:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
 					default: pkt->descr = "UKNOWN COMMAND";break;
 				};break;
 			case 0x08:
-				//switch(OCF(_cmd_pkt->opcode)){
 				switch(OCF(pkt->cmd->opcode)){
-					case HCI_CMD_LE_SET_EVENT_MASK : pkt->descr = cmd_descriptions_group_8[0x0];break;
-					case HCI_CMD_LE_READ_BUFFER_SIZE : pkt->descr = cmd_descriptions_group_8[0x1];break;
-					case HCI_CMD_LE_READ_LOCAL_SUPPORTED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x2];break;
-					case HCI_CMD_LE_SET_RANDOM_ADDRES : pkt->descr = cmd_descriptions_group_8[0x3];break;
-					case HCI_CMD_LE_SET_ADVERTISING_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x4];break;
-					case HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER : pkt->descr = cmd_descriptions_group_8[0x5];break;
-					case HCI_CMD_LE_SET_ADVERTISING_DATA : pkt->descr = cmd_descriptions_group_8[0x6];break;
-					case HCI_CMD_LE_SET_SCAN_RESPONSE_DATA : pkt->descr = cmd_descriptions_group_8[0x7];break;
-					case HCI_CMD_LE_SET_ADVERTISE_ENABLE : pkt->descr = cmd_descriptions_group_8[0x8];break;
+					case HCI_CMD_LE_SET_EVENT_MASK : pkt->descr = cmd_descriptions_group_8[0x1];break;
+					case HCI_CMD_LE_READ_BUFFER_SIZE : pkt->descr = cmd_descriptions_group_8[0x2];break;
+					case HCI_CMD_LE_READ_LOCAL_SUPPORTED_FEATURES : pkt->descr = cmd_descriptions_group_8[0x3];break;
+					case HCI_CMD_LE_SET_RANDOM_ADDRES : pkt->descr = cmd_descriptions_group_8[0x4];break;
+					case HCI_CMD_LE_SET_ADVERTISING_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x5];break;
+					case HCI_CMD_LE_READ_ADVERTISING_CHANNEL_TX_POWER : pkt->descr = cmd_descriptions_group_8[0x6];break;
+					case HCI_CMD_LE_SET_ADVERTISING_DATA : pkt->descr = cmd_descriptions_group_8[0x7];break;
+					case HCI_CMD_LE_SET_SCAN_RESPONSE_DATA : pkt->descr = cmd_descriptions_group_8[0x8];break;
+					case HCI_CMD_LE_SET_ADVERTISE_ENABLE : pkt->descr = cmd_descriptions_group_8[0x9];break;
 					case HCI_CMD_LE_SET_SCAN_PARAMETERS : pkt->descr = cmd_descriptions_group_8[0x9];break;
 					case HCI_CMD_LE_SET_SCAN_ENABLE : pkt->descr = cmd_descriptions_group_8[0xA];break;
 					case HCI_CMD_LE_CREATE_CONNECTION : pkt->descr = cmd_descriptions_group_8[0xB];break;
@@ -820,26 +964,13 @@ void parse_hci_cmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 					case HCI_CMD_LE_READ_PEER_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x28];break;
 					case HCI_CMD_LE_READ_LOCAL_RESOLVABLE_ADDRESS : pkt->descr = cmd_descriptions_group_8[0x29];break;
 					case HCI_CMD_LE_SET_ADDRESS_RESOLUTION_ENABLE : pkt->descr = cmd_descriptions_group_8[0x2A];break;
-					case HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT : pkt->descr = cmd_descriptions_group_8[0x30];break;
+					case HCI_CMD_LE_SET_RESOLVABLE_PRIVATE_ADDRESS_TIMEOUT: pkt->descr = cmd_descriptions_group_8[0x30];break;
 					case HCI_CMD_LE_READ_MAXIMUM_DATA_LENGTH : pkt->descr = cmd_descriptions_group_8[0x31];break;
 					default: pkt->descr = "UKNOWN COMMAND";break;
 
 				};break;
 			default: pkt->descr = "UKNOWN COMMAND" ;break;
 	}	
-	//print_hci_packet(pkt);
-	//printf("\t\tHCI CMD: [%s] {\n",
-	//			pkt->descr);				
-	//printf("\t\t* opcode -> '0x%.2x'\n",
-	//	pkt->cmd->opcode);
-	//printf("\t\t* opcode group   -> '0x%.2x'\n",
-	//	OGF(pkt->cmd->opcode));
-	//printf("\t\t* opcode command -> '0x%.2x'\n",
-	//	OCF(pkt->cmd->opcode));
-	//printf("\t\t* param_len -> '0x%.2x' bytes \n",
-	//	pkt->cmd->param_len);
-	//printf("\t\t}\n");
-	
 	return pkt;
 }
 void parse_hci_async(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
@@ -851,33 +982,19 @@ void parse_hci_vendorcmd(hci_pkt_t *pkt,btsnoop_packet_record_t *record){
 
 void parse_hci(hci_pkt_t *pkt, btsnoop_packet_record_t* packet_record){
 
-	//printf("[hci] parsing hci packet @ (%p)\n", &packet_record);
-
 	uint8_t pkt_type = 0;
-	//pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
-
-	//if (!packet_record){ return ;}
 	pkt_type = (uint8_t) packet_record->data[0];
-	//printf("[*] parsing hci packet...\n");
-	//print_btpacket_record(0,packet_record);
-	
-	//printf("\t[hci] packet type -> [0x%.2x]\n",pkt_type);
 
 	switch(pkt_type){
 			case HCI_CMD_PKT:  
-					//printf(" HCI_CMD\n");	
 					parse_hci_cmd(pkt, packet_record);break;
 			case HCI_ASYNC_DATA_PKT:  
-					//printf(" HCI_ASYNC_DATA\n");	
 					parse_hci_async(pkt, packet_record);break;
 			case HCI_EVENT_PKT:  
-					//printf(" HCI_EVENT\n");	
 					parse_hci_event(pkt, packet_record);break;
 			case HCI_EXT_CMD_PKT:  
-					//printf(" HCI_EXT_EVENT\n");	
 					parse_hci_event(pkt, packet_record);break;
 			case HCI_VENDOR_CMD_PKT:  
-					//printf(" HCI_VENDOR_CMD\n");	
 					parse_hci_event(pkt, packet_record);break;
 					parse_hci_vendorcmd(pkt, packet_record);break;
 			default: printf("[x] problem determining cmd type...\n");pkt = NULL ;break;
@@ -983,7 +1100,6 @@ int readseek_btpacket_record(FILE *file,btsnoop_packet_record_t *bt_packet_recor
 
 	memset(bt_packet_record,0x0,sizeof(BT_PACKET_RECORD_SZ));
 	bytes_read = readseek_btpacket_origlength(file,bt_packet_record);
-	//printf("[*] orig_length -> %d\n",bt_packet_record->orig_length);
 	if (bytes_read < 0){
 		printf("[x] problem reading original length value from file bytes_read => %d\n",bytes_read);
 		return -1;
@@ -991,7 +1107,6 @@ int readseek_btpacket_record(FILE *file,btsnoop_packet_record_t *bt_packet_recor
 
 	memset(&bt_packet_record->incl_length,0x0,BT_PACKET_INCLEN_SZ);
 	bytes_read = readseek_btpacket_inclength(file,bt_packet_record);
-	//printf("[*] incl_length -> %d\n",bt_packet_record->incl_length);
 	if (bytes_read < 0){
 		printf("[x] problem reading included length from file\n");
 		return -1;
@@ -1000,7 +1115,6 @@ int readseek_btpacket_record(FILE *file,btsnoop_packet_record_t *bt_packet_recor
 
 	memset(&bt_packet_record->flags,0x0,BT_PACKET_FLAGS_SZ);
 	bytes_read = readseek_btpacket_flags(file,bt_packet_record);
-	//printf("[*] flags -> %d\n",bt_packet_record->flags);
 
 	if (bytes_read < 0){
 		printf("[x] problem reading flags from file\n");
@@ -1009,7 +1123,6 @@ int readseek_btpacket_record(FILE *file,btsnoop_packet_record_t *bt_packet_recor
 
 	memset(&bt_packet_record->drops,0x0,BT_PACKET_DROPS_SZ);
 	bytes_read = readseek_btpacket_drops(file,bt_packet_record);
-	//printf("[*] drops -> %d\n",bt_packet_record->drops);
 	if (bytes_read < 0){
 		printf("[x] problem reading drops from file\n");
 		return -1;
@@ -1017,7 +1130,6 @@ int readseek_btpacket_record(FILE *file,btsnoop_packet_record_t *bt_packet_recor
 
 	memset(&bt_packet_record->timestamp,0x0,BT_PACKET_TIMESTAMP_SZ);
 	bytes_read = readseek_btpacket_timestamp(file,bt_packet_record);
-	//printf("[*] timestamp -> %d\n",bt_packet_record->timestamp);
 
 	if (!bytes_read){
 		printf("[x] problem reading timestamp from file\n");
@@ -1076,7 +1188,7 @@ void print_btpacket_record_withhci(unsigned int offset,
 		}	
 		printf("\n");
 		print_hci_packet(_hci_pkt);
-		printf("\n\n\t}\n\n");
+		printf("\t}\n\n");
 }
 void print_hci_packet(hci_pkt_t * _hci_pkt){
 
@@ -1084,10 +1196,6 @@ void print_hci_packet(hci_pkt_t * _hci_pkt){
 			printf("[x] got a null hci packet\n");
 			return;
 		}
-
-		//hci_pkt_cmd_t *_cmd_pkt = (hci_pkt_cmd_t*) _hci_pkt->cmd;
-		//hci_pkt_async_t *_async_pkt = (hci_pkt_async_t*) _hci_pkt->async;
-		//hci_pkt_event_t *_event_pkt = (hci_pkt_event_t*) _hci_pkt->event;
 
 		if(_hci_pkt->cmd){ 
 			printf("\t\tHCI CMD: [%s] {\n",
@@ -1118,8 +1226,7 @@ void print_hci_packet(hci_pkt_t * _hci_pkt){
 			printf("\t\tHCI ASYNC EVENT: [%s] {");				
 
 		}
-		
-		printf("\n\n\t\t}\n");
+		printf("\n\t\t}\n");
 
 }
 
@@ -1150,7 +1257,7 @@ void print_btpacket_record(unsigned int offset, btsnoop_packet_record_t * _bt_pa
 
 		for (data_index = 0; data_index < _bt_packet->incl_length; data_index++){
 				if (line_index == 0){
-					printf("\t[0x%0.2x] ",_bt_packet->data[data_index]);
+					printf("\t\t[0x%0.2x] ",_bt_packet->data[data_index]);
 				}
 				else if (line_index > 8){	
 					printf("[0x%0.2x]\n\t",_bt_packet->data[data_index]);
@@ -1271,7 +1378,6 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 	fseek(file,BT_FILE_HEADER_SZ,SEEK_SET); //reset pointer
 
 	while (bytes_read != -1){
-		//read the data field
 		_bt_packet = (btsnoop_packet_record_t *) malloc(sizeof(btsnoop_packet_record_t));
 		_hci_pkt = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
 		if (!_bt_packet){
@@ -1284,7 +1390,7 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 			_bt_cur_list->record = _bt_packet;
 
 			parse_hci(_hci_pkt,_bt_packet);
-			//_hci_cur_list->packet = (hci_pkt_t *) malloc(sizeof(hci_pkt_t));
+
 			_hci_cur_list->packet = _hci_pkt;
 
 			_hci_cur_list->prev = _hci_prev_list; 
@@ -1311,7 +1417,6 @@ btsnoop_packet_list_t* get_bt_packets(const char *filename){
 			_bt_cur_list = _bt_cur_list->next;
 			_hci_cur_list = _hci_cur_list->next;
 
-			//get_hci_packet(_bt_packet);	 //everything is in place now, we just need to map out the hci data
 		}
 	}
 	return _bt_packet_list;
@@ -1376,14 +1481,12 @@ btsnoop_header_t* init_bt_header(FILE * file){
 
 	bytes_read = readseek_btsnoop_version(file,bt_file_header);
 	if (bytes_read < 0){
-	//if (bytes_read != sizeof(bt_file_header->version)){
 		printf("[x] didn't read full version value, bailing...\n");
 		return NULL;
 	}
 
 	bytes_read = readseek_btsnoop_datalink_type(file,bt_file_header);
 	if (bytes_read < 0){
-	//if (bytes_read != sizeof(bt_file_header->datalink_type)){
 		printf("[x] didn't read full datalink_type, bailing...\n");
 		return NULL;
 	}
@@ -1436,10 +1539,6 @@ int main(int argc, char **argv){
 	btsnoop_header_t *bt_header = NULL;
 	bt_header = open_hci_log(argv[1]);
 	print_bt_header(bt_header);
-
-
-
-
 	btsnoop_packet_list_t *_packet_list = get_bt_packets(argv[1]); 
 	hci_packet_list_t* _hci_packet_list = (hci_packet_list_t *) _packet_list->_hci_packet_list;
 	unsigned int index = 0;
@@ -1448,10 +1547,13 @@ int main(int argc, char **argv){
 			btsnoop_packet_record_t *_packet_record = (btsnoop_packet_record_t *) _packet_list->record;	
 			hci_pkt_t * _hci_packet = _hci_packet_list->packet;
 			if (_hci_packet){
-			print_btpacket_record_withhci(index,_packet_record,_hci_packet);
+				print_btpacket_record_withhci(index,_packet_record,_hci_packet);
+
 			}else{
+
 				print_btpacket_record(index,_packet_record);
 			}
+
 			_packet_list = _packet_list->next;
 			_hci_packet_list = _hci_packet_list->next;
 
